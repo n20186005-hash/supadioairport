@@ -1,0 +1,261 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { airport } from '../../data/site';
+
+const pageUrl = Astro.site ? new URL('/en/', Astro.site).href : undefined;
+const officialSourcesEn = [
+  { label: 'Directorate General of Civil Aviation — Supadio Airport profile', href: 'https://hubud.kemenhub.go.id/bandara/123' },
+  { label: 'State Secretariat — inauguration of the new Supadio terminal', href: 'https://www.setneg.go.id/baca/index/resmikan_terminal_baru_bandara_supadio_presiden_minta_pelayanan_penumpang_ditingkatkan' },
+  { label: 'Indonesian Air Force — history of Supadio Air Base and Sungai Durian', href: 'https://tni-au.mil.id/tentang-kami/profilsatuan-detail/lanud-supadio/1108' },
+  { label: 'West Kalimantan Youth, Sports and Tourism Office', href: 'https://disporapar.kalbarprov.go.id/' },
+  { label: 'Ministry of Tourism of the Republic of Indonesia', href: 'https://kemenpar.go.id/' },
+  { label: 'Kubu Raya Regency Government', href: 'https://kuburayakab.go.id/' },
+  { label: 'ACI Asia-Pacific & Middle East — ASQ Awards', href: 'https://www.aci-asiapac.aero/media-centre/news/35-airports-from-asia-pacific-and-middle-east-win-68-asq-awards-for-service-excellence' }
+] as const;
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': ['TouristAttraction', 'LocalBusiness'],
+      additionalType: 'https://schema.org/Airport',
+      name: airport.name,
+      alternateName: `${airport.shortName} (${airport.iata})`,
+      description: 'The main airport serving Pontianak and the aerial gateway to West Kalimantan in Kubu Raya Regency.',
+      ...(pageUrl ? { url: pageUrl } : {}),
+      image: pageUrl ? new URL('/images/supadio-aircraft.webp', pageUrl).href : '/images/supadio-aircraft.webp',
+      address: { '@type': 'PostalAddress', streetAddress: 'Jl. Arteri Supadio Km. 17', addressLocality: 'Sungai Raya', addressRegion: 'West Kalimantan', postalCode: '78391', addressCountry: 'ID' },
+      geo: { '@type': 'GeoCoordinates', latitude: airport.latitude, longitude: airport.longitude },
+      openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], opens: '06:00', closes: '20:00' }],
+      aggregateRating: { '@type': 'AggregateRating', ratingValue: airport.rating, bestRating: 5, ratingCount: airport.ratingCount }
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        ['Is Supadio Airport open 24 hours?', 'Official airport channels list operating hours as 06:00-20:00 WIB. Flight operations may change, so check airline schedules and official channels before travelling.'],
+        ['Is there an entrance ticket for the terminal?', 'There is no sightseeing ticket for the public terminal area. Access to restricted zones follows security screening and aviation rules. Flight tickets, parking, transport, or optional services are separate costs.'],
+        ['How do I reach Supadio Airport from Pontianak?', 'The main road approach follows the Ahmad Yani corridor and Jalan Arteri Supadio. Practical options include taxis, hired vehicles, app-based transport, private cars, and any bus or shuttle service confirmed for the day of travel.'],
+        ['Are toilets and food available?', 'The official airport profile lists public and transport-related facilities. Basic passenger amenities are available in the terminal, but locations, opening hours, and outlet operations may change.'],
+        ['Is parking available?', 'Yes. Parking areas are available within the airport complex. Rates, zones, and rules may change, so use official on-site signage as the primary reference.'],
+        ['How early should I be at the airport?', 'For flights, follow your airline check-in deadline and add time for traffic, parking, security screening, and queues. For a short orientation visit to the public area, around 45-90 minutes is usually enough.'],
+        ['Is public transport always available?', 'Bus or shuttle availability depends on the operator and time of day. This site does not publish unverified fixed schedules; confirm service availability on the day of travel.'],
+        ['Where is Supadio Airport located?', 'The airport is in Limbung, Sungai Raya District, Kubu Raya Regency, West Kalimantan, on the main corridor leading to Pontianak.']
+      ].map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } }))
+    }
+  ]
+};
+---
+<BaseLayout locale="en" pageKey="home" title="Supadio Airport Guide - Visitor Information for Kubu Raya" description="An independent nonprofit guide to Supadio International Airport: history, transport, facilities, parking, costs, maps, and practical context for Kubu Raya and Pontianak.">
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <main>
+    <section class="relative min-h-[92vh] overflow-hidden bg-night text-white">
+      <img src="/images/supadio-aircraft.webp" alt="Aircraft and terminal at Supadio International Airport" class="absolute inset-0 h-full w-full object-cover" fetchpriority="high" />
+      <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,26,34,.93)_0%,rgba(7,26,34,.74)_45%,rgba(7,26,34,.2)_100%)]"></div>
+      <div class="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-night to-transparent"></div>
+      <div class="container-site relative z-10 flex min-h-[92vh] items-end pb-16 pt-36 md:pb-24">
+        <div class="max-w-3xl">
+          <div class="mb-5 flex flex-wrap gap-2 text-xs font-extrabold tracking-[.16em]">
+            <span class="rounded-full border border-runway/60 bg-night/50 px-4 py-2">PNK · {airport.icao}</span>
+            <span class="rounded-full border border-white/20 bg-night/50 px-4 py-2">KUBU RAYA · WEST KALIMANTAN</span>
+          </div>
+          <p class="eyebrow mb-4 text-runway">The air gateway to Pontianak</p>
+          <h1 class="max-w-3xl text-5xl font-black leading-[.95] tracking-[-.045em] md:text-7xl">Understand Supadio before the journey begins.</h1>
+          <p class="mt-6 max-w-2xl text-lg leading-8 text-white/80">An independent visitor guide to the airport, ground access, facilities, history, and regional context, without commercial promotion.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="#transportasi" class="focus-ring rounded-full bg-runway px-6 py-3 font-extrabold text-night">Plan your access</a>
+            <a href="#peta" class="focus-ring rounded-full border border-white/30 bg-white/5 px-6 py-3 font-bold backdrop-blur">View map</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-night pb-12 text-white">
+      <div class="container-site grid gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ['Location', 'Limbung · Sungai Raya'],
+          ['Operating hours', airport.operatingHours + '*'],
+          ['Airport code', airport.iata + ' / ' + airport.icao],
+          ['Google Maps rating', `${airport.rating}/5 · about ${airport.ratingCount.toLocaleString('en-US')} reviews*`]
+        ].map(([k, v]) => <div class="bg-night/95 p-6"><p class="text-xs font-bold uppercase tracking-[.16em] text-white/45">{k}</p><p class="mt-2 text-xl font-extrabold">{v}</p></div>)}
+      </div>
+      <p class="container-site mt-3 text-xs text-white/45">*Operating hours and ratings may change. Confirm operational information through official channels and your airline.</p>
+    </section>
+
+    <section id="kenali" class="section-pad">
+      <div class="container-site grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:items-start">
+        <div class="lg:sticky lg:top-8">
+          <p class="eyebrow text-river">Know Supadio</p>
+          <h2 class="mt-4 text-4xl font-black tracking-[-.04em] md:text-5xl">More than a departure point.</h2>
+          <p class="mt-5 max-w-xl leading-8 text-ink/70">Supadio Airport stands in Kubu Raya Regency and serves as a major air node for Pontianak as well as travel across West Kalimantan.</p>
+          <img src="/images/supadio-apron.jpg" alt="Apron and terminal at Supadio Airport" class="mt-8 aspect-[4/3] w-full rounded-[2rem] object-cover shadow-xl" loading="lazy" />
+        </div>
+        <div class="space-y-5">
+          <article class="card p-7 md:p-9"><p class="eyebrow text-runway">Identity</p><h3 class="mt-2 text-2xl font-extrabold">PNK for passengers, WIOO for aviation</h3><p class="mt-4 leading-8 text-ink/70">The Directorate General of Civil Aviation lists Supadio as an international-use airport managed by PT Angkasa Pura Indonesia and located in Limbung, Sungai Raya, Kubu Raya Regency.</p></article>
+          <article class="card p-7 md:p-9"><p class="eyebrow text-runway">Historical trace</p><h3 class="mt-2 text-2xl font-extrabold">From Sungai Durian to a modern terminal</h3><p class="mt-4 leading-8 text-ink/70">Historically the airport was known as Bandar Udara Sungai Durian before taking the name Supadio. The new terminal was inaugurated on 28 December 2017. State Secretariat records also note the use of Dayak ornamentation on the terminal facade, placing West Kalimantan identity at the point of arrival.</p></article>
+          <article class="card p-7 md:p-9"><p class="eyebrow text-runway">Passenger experience</p><h3 class="mt-2 text-2xl font-extrabold">Recognised in the ASQ Awards</h3><p class="mt-4 leading-8 text-ink/70">ACI Asia-Pacific & Middle East lists Supadio as a winner in the Best Airport category for 2-5 million passengers in Asia-Pacific in the 2024 ASQ Awards. The award relates to passenger experience and does not change the independent nature of this guide.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="sejarah" class="section-pad bg-cloud">
+      <div class="container-site">
+        <div class="grid gap-10 lg:grid-cols-[.72fr_1.28fr]">
+          <div>
+            <p class="eyebrow text-river">Archives, local narratives, and airport studies</p>
+            <h2 class="mt-4 text-4xl font-black tracking-[-.04em] md:text-5xl">Reading Supadio as layered history and infrastructure.</h2>
+            <p class="mt-5 leading-8 text-ink/70">This area is more than a civil terminal. The Indonesian Air Force history of Supadio Air Base traces the earlier Sungai Durian airfield, while regulator data explains its role in the modern aviation network.</p>
+          </div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <article class="card p-7"><p class="eyebrow text-runway">Early period</p><h3 class="mt-3 text-xl font-extrabold">From colonial planning to an airfield</h3><p class="mt-3 text-sm leading-7 text-ink/70">The Indonesian Air Force historical profile notes that the Dutch colonial government once planned an airfield at Sungai Durian. Construction later continued under Japanese occupation, and the site developed into a strategic aviation node.</p></article>
+            <article class="card p-7"><p class="eyebrow text-runway">Indonesian period</p><h3 class="mt-3 text-xl font-extrabold">Rebuilt and renamed</h3><p class="mt-3 text-sm leading-7 text-ink/70">Reconstruction efforts are recorded as beginning in the early 1950s. In the Air Force chronology, Pangkalan Udara Sungai Durian became Pangkalan TNI AU Supadio in 1969.</p></article>
+            <article class="card p-7"><p class="eyebrow text-runway">Modern terminal</p><h3 class="mt-3 text-xl font-extrabold">West Kalimantan identity at the arrival gate</h3><p class="mt-3 text-sm leading-7 text-ink/70">The new terminal opened on 28 December 2017. State Secretariat records mention Dayak ornamentation as part of its architectural character.</p></article>
+            <article class="card p-7"><p class="eyebrow text-runway">Local oral record</p><h3 class="mt-3 text-xl font-extrabold">Why was it once called Sungai Durian?</h3><p class="mt-3 text-sm leading-7 text-ink/70">The Indonesian Air Force history records an oral tradition that settlers along the river planted durian trees until the village became known as Sungai Durian. We present it here as documented oral tradition, not as a standalone archaeological finding.</p></article>
+          </div>
+        </div>
+        <div class="mt-10 grid gap-px overflow-hidden rounded-[2rem] border border-ink/10 bg-ink/10 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="bg-night p-6 text-white"><p class="text-xs font-bold uppercase tracking-[.16em] text-white/45">Runway</p><p class="mt-2 text-2xl font-black">2,600 × 45 m</p><p class="mt-2 text-xs leading-6 text-white/55">Verified dimensions listed by the civil aviation regulator.</p></div>
+          <div class="bg-night p-6 text-white"><p class="text-xs font-bold uppercase tracking-[.16em] text-white/45">Classification</p><p class="mt-2 text-2xl font-black">4C</p><p class="mt-2 text-xs leading-6 text-white/55">Airport classification code shown in the regulator profile.</p></div>
+          <div class="bg-night p-6 text-white"><p class="text-xs font-bold uppercase tracking-[.16em] text-white/45">Reference aircraft</p><p class="mt-2 text-2xl font-black">Boeing 737-800</p><p class="mt-2 text-xs leading-6 text-white/55">Listed by the regulator as the reference aircraft.</p></div>
+          <div class="bg-night p-6 text-white"><p class="text-xs font-bold uppercase tracking-[.16em] text-white/45">Use status</p><p class="mt-2 text-2xl font-black">International</p><p class="mt-2 text-xs leading-6 text-white/55">Use status shown in the Directorate General of Civil Aviation profile.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad bg-river text-white">
+      <div class="container-site">
+        <div class="max-w-3xl"><p class="eyebrow text-runway">Before you leave</p><h2 class="mt-4 text-4xl font-black tracking-[-.04em] md:text-5xl">Four checks worth repeating.</h2></div>
+        <div class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[
+            ['01', 'Flight timing', 'Use your airline app or official airline channels. Do not rely on static schedules from a guide site.'],
+            ['02', 'Ground travel time', 'Add buffer time for Pontianak-Sungai Raya traffic, parking, and queues.'],
+            ['03', 'Travel documents', 'Make sure identification, tickets, and any supporting documents match your route and airline requirements.'],
+            ['04', 'Pick-up points', 'Follow official signs for taxis, app-based vehicles, private cars, and designated pick-up areas.']
+          ].map(([n, t, d]) => <article class="rounded-3xl border border-white/12 bg-white/5 p-6"><p class="font-mono text-sm text-runway">{n}</p><h3 class="mt-5 text-xl font-extrabold">{t}</h3><p class="mt-3 text-sm leading-7 text-white/70">{d}</p></article>)}
+        </div>
+      </div>
+    </section>
+
+    <section id="transportasi" class="section-pad">
+      <div class="container-site">
+        <div class="grid gap-8 lg:grid-cols-[.65fr_1.35fr]">
+          <div><p class="eyebrow text-river">Detailed transport</p><h2 class="mt-4 text-4xl font-black tracking-[-.04em] md:text-5xl">From the city to the terminal, without guessed schedules.</h2><p class="mt-5 leading-8 text-ink/70">Because Supadio itself is the airport, this section covers both flying into PNK and reaching the terminal by road from Pontianak and nearby areas.</p></div>
+          <div class="grid gap-4 md:grid-cols-2">
+            {[
+              ['Flying into PNK', 'Use the IATA code PNK when searching for flights. Once you land, you are already at the site covered by this guide; continue to arrivals, collect baggage, and choose ground transport from the official zones.'],
+              ['From central Pontianak', 'The general approach follows Jalan Ahmad Yani toward Jalan Arteri Supadio. Travel time is often measured in tens of minutes, but congestion, rain, and peak hours can change it.'],
+              ['Taxi', 'A direct option from the city or the terminal. Use official zones, confirm the fare or fare method before departure, and avoid unclear offers.'],
+              ['App-based transport', 'Availability depends on time and pick-up rules. Follow app instructions and airport pick-up zone signage.'],
+              ['Bus / shuttle service', 'Service can change by operator and period. Confirm route, timing, boarding point, and payment on the day of travel; this site intentionally avoids publishing unverified fixed schedules.'],
+              ['Private car', 'Enter through the airport arterial corridor. Distinguish drop-off lanes from parking areas and allow time to enter and leave the terminal complex.'],
+              ['From outside Pontianak', 'Intercity travel usually requires a separate road connection to the Sungai Raya corridor. Plan transfers and time buffers independently.']
+            ].map(([t, d]) => <article class="card p-7"><h3 class="text-xl font-extrabold">{t}</h3><p class="mt-3 text-sm leading-7 text-ink/70">{d}</p></article>)}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fasilitas" class="section-pad bg-white/60">
+      <div class="container-site">
+        <p class="eyebrow text-river">Facilities & practical needs</p>
+        <h2 class="mt-4 max-w-4xl text-4xl font-black tracking-[-.04em] md:text-5xl">The information people usually look for after stepping out of a vehicle.</h2>
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            ['Toilets & sanitation', 'Look for toilet symbols in the public terminal area. For accessibility needs or specific assistance, ask airport staff.'],
+            ['Prayer facilities', 'Prayer spaces are generally available within the terminal area; follow signage because access locations may change.'],
+            ['Charging points', 'Power outlets may be available in waiting areas. Bring your own adapter or cable and do not leave devices unattended.'],
+            ['ATM & payments', 'ATM or payment facilities may vary by terminal area. Carry more than one payment method for travel needs.'],
+            ['Food & drink', 'Food services are available in the terminal and along the route toward the city. This guide does not endorse particular outlets or brands.'],
+            ['Convenience needs', 'Look for convenience-store type services in the terminal or along the airport road corridor and check opening hours at the time of arrival.'],
+            ['Baggage', 'Follow display screens and signs for baggage claim and check-in counters. Baggage issues should be handled directly through the airline or relevant airport staff.'],
+            ['Vehicle rental', 'If you need a rental vehicle, use licensed services, understand the rental terms and insurance cover, and confirm the handover point without relying on brand promotion.'],
+            ['Accessibility', 'Passengers who need wheelchairs or other assistance are advised to arrange support with the airline before departure.'],
+            ['Accommodation', 'Transit accommodation options are available along the airport corridor and in central Pontianak. Choose by transfer needs, city access, and budget rather than by brand ranking.'],
+            ['Fuel & EV charging', 'Fuel stations are available on the main road corridor. Electric vehicle charging availability may change; check operator maps before relying on it.']
+          ].map(([t, d]) => <article class="rounded-3xl border border-ink/10 bg-cloud p-6"><h3 class="font-extrabold">{t}</h3><p class="mt-3 text-sm leading-7 text-ink/65">{d}</p></article>)}
+        </div>
+        <div class="mt-10 overflow-hidden rounded-[2rem] bg-night p-3"><img src="/images/supadio-interior.jpg" alt="Inside the terminal at Supadio International Airport" class="max-h-[560px] w-full rounded-[1.4rem] object-cover" loading="lazy" /><p class="px-3 pb-2 pt-3 text-xs text-white/55">Terminal interior. Photo: SunDawn, CC BY-SA 4.0, via Wikimedia Commons.</p></div>
+      </div>
+    </section>
+
+    <section class="section-pad bg-river text-white">
+      <div class="container-site">
+        <div class="grid gap-10 lg:grid-cols-[.72fr_1.28fr]">
+          <div><p class="eyebrow text-runway">Passenger flow</p><h2 class="mt-4 text-4xl font-black tracking-[-.04em] md:text-5xl">Understand the sequence, then follow terminal signage.</h2><p class="mt-5 leading-8 text-white/70">Detailed layouts may change, but understanding the order of airport functions helps visitors read the space without depending on a floor plan that quickly becomes dated.</p></div>
+          <div class="grid gap-4 md:grid-cols-2">
+            <article class="rounded-3xl border border-white/12 bg-white/5 p-7"><p class="eyebrow text-runway">Departure</p><ol class="mt-4 space-y-3 text-sm leading-7 text-white/75"><li><strong>1.</strong> Arrive at the drop-off zone or parking area.</li><li><strong>2.</strong> Check in and drop baggage if needed.</li><li><strong>3.</strong> Proceed through security screening.</li><li><strong>4.</strong> Watch information screens and head to the departure gate.</li></ol></article>
+            <article class="rounded-3xl border border-white/12 bg-white/5 p-7"><p class="eyebrow text-runway">Arrival</p><ol class="mt-4 space-y-3 text-sm leading-7 text-white/75"><li><strong>1.</strong> Follow passenger flow toward arrivals.</li><li><strong>2.</strong> Collect baggage if needed.</li><li><strong>3.</strong> Resolve baggage issues through the airline or relevant staff.</li><li><strong>4.</strong> Exit to the public area and follow official transport zones.</li></ol></article>
+            <article class="rounded-3xl border border-white/12 bg-white/5 p-7 md:col-span-2"><p class="eyebrow text-runway">Health, assistance & accessibility</p><p class="mt-4 text-sm leading-7 text-white/75">The Directorate General of Civil Aviation profile lists medical facilities and an Airport Health Office at the airport. For wheelchairs, accompaniment, medical conditions, or other specific needs, it is best to coordinate with the airline early and ask terminal staff for help. In urgent situations, prioritise on-site staff and local emergency services.</p></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-pad">
+      <div class="container-site grid gap-6 lg:grid-cols-3">
+        <article class="card p-8"><p class="eyebrow text-river">Tickets / costs</p><h2 class="mt-3 text-2xl font-extrabold">There is no visitor admission ticket</h2><p class="mt-4 leading-7 text-ink/70">The public terminal area is not a ticketed tourist attraction. Flight tickets, parking, ground transport, premium waiting areas, excess baggage, and optional services all carry their own charges. For values that change, use the official rate at the point of transaction.</p></article>
+        <article class="card p-8"><p class="eyebrow text-river">Parking</p><h2 class="mt-3 text-2xl font-extrabold">Follow zones and posted tariffs</h2><p class="mt-4 leading-7 text-ink/70">Parking is available within the airport complex. Distinguish between drop-off, pick-up, car parking, and motorcycle parking zones. Rates and rules may be updated; official signs at the entrance are the main reference.</p></article>
+        <article class="card p-8"><p class="eyebrow text-river">Time & duration</p><h2 class="mt-3 text-2xl font-extrabold">Plan around your flight</h2><p class="mt-4 leading-7 text-ink/70">For air travel, follow the airline check-in deadline and add buffer time for the road journey. If you are only dropping off, picking up, or orienting yourself in the public area, around 45-90 minutes is usually sufficient. Morning road travel may feel easier, but tropical weather can change quickly.</p></article>
+      </div>
+    </section>
+
+    <section id="sekitar" class="section-pad bg-night text-white">
+      <div class="container-site">
+        <div class="grid gap-10 lg:grid-cols-[.7fr_1.3fr]">
+          <div><p class="eyebrow text-runway">Around the airport</p><h2 class="mt-4 text-4xl font-black tracking-[-.04em] md:text-5xl">From the Kubu Raya corridor toward Pontianak.</h2><p class="mt-5 leading-8 text-white/65">The options below are categories of service or public cultural places. We do not rank restaurants, hotels, shops, or transport providers.</p></div>
+          <div class="space-y-4">
+            <article class="rounded-3xl border border-white/12 p-7"><h3 class="text-xl font-extrabold text-runway">Food nearby</h3><p class="mt-3 leading-7 text-white/65">Along Arteri Supadio and the Ahmad Yani direction you will find local eateries, food stalls, coffee shops, bakeries, convenience stores, and family dining venues. Choose based on hygiene, clear pricing, dietary needs, and opening hours.</p></article>
+            <article class="rounded-3xl border border-white/12 p-7"><h3 class="text-xl font-extrabold text-runway">Shopping, lodging & vehicles</h3><p class="mt-3 leading-7 text-white/65">For travel needs, look for supermarket or minimarket categories, hotels or transit lodging, pharmacies, fuel stations, workshops, and, where available, EV charging points. Verify actual availability before departure.</p></article>
+          </div>
+        </div>
+        <div class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[
+            ['Equator Monument', 'A public landmark introducing Pontianak as a city on the equatorial line.'],
+            ['West Kalimantan Museum', 'A space for regional history, culture, and collections from West Kalimantan.'],
+            ['Rumah Radakng', 'A cultural building representing the Dayak longhouse tradition.'],
+            ['Alun Kapuas Park', 'A public riverfront space on the Kapuas in central Pontianak.']
+          ].map(([t, d]) => <article class="rounded-3xl bg-white/6 p-6"><p class="eyebrow text-white/40">Public place</p><h3 class="mt-3 text-lg font-extrabold">{t}</h3><p class="mt-3 text-sm leading-7 text-white/60">{d}</p><p class="mt-4 text-xs font-bold text-runway">Allow 30-60+ minutes to reach the city area, depending on traffic.</p></article>)}
+        </div>
+      </div>
+    </section>
+
+    <section id="peta" class="section-pad">
+      <div class="container-site grid gap-8 lg:grid-cols-[.65fr_1.35fr] lg:items-center">
+        <div><p class="eyebrow text-river">Location map</p><h2 class="mt-4 text-4xl font-black tracking-[-.04em]">Jl. Arteri Supadio Km. 17</h2><p class="mt-5 leading-8 text-ink/70">Limbung, Sungai Raya District, Kubu Raya Regency, West Kalimantan. The embedded Google Map below uses Indonesian regional settings.</p><p class="mt-4 text-sm font-bold">Guide coordinates: {airport.latitude}, {airport.longitude}</p></div>
+        <div class="overflow-hidden rounded-[2rem] border border-ink/10 bg-white p-2 shadow-xl">
+          <iframe title="Map of Supadio International Airport" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6899.037952232692!2d109.40270841243542!3d-0.1476037998503186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e1d59b7211fe5cf%3A0xbe952b257ebaed28!2z6IuP5be06L-q5aWl5Zu96ZmF5py65Zy6!5e1!3m2!1sid!2sid!4v1787144371325!5m2!1sid!2sid" width="100%" height="520" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section-pad bg-white/60">
+      <div class="container-site grid gap-10 lg:grid-cols-[.65fr_1.35fr]">
+        <div><p class="eyebrow text-river">Questions & answers</p><h2 class="mt-4 text-4xl font-black tracking-[-.04em]">The most useful questions before you arrive.</h2></div>
+        <div class="space-y-3">
+          {[
+            ['Is Supadio Airport open 24 hours?', 'Official airport channels list operating hours as 06:00-20:00 WIB. Flight operations may change, so check airline schedules and official channels before travelling.'],
+            ['Is there an entrance ticket to the terminal?', 'There is no sightseeing ticket for the public area. Restricted zones follow security checks and aviation rules; services such as parking or transport are charged separately.'],
+            ['What is the simplest way from Pontianak?', 'Taxi, app-based vehicles, private cars, or any available shuttle or bus service. For public transport, confirm the current schedule on the day of travel.'],
+            ['Are toilets, food, and charging available?', 'Basic passenger amenities are available in the terminal environment, but exact points and hours may change. Follow signage and ask staff if you need a specific facility.'],
+            ['Is parking available?', 'Yes. Parking areas are available within the airport complex. Use official zones and check the latest on-site tariff signs.'],
+            ['When should I arrive?', 'Follow your airline check-in deadline and add time for the road journey, parking, security screening, and possible queues.'],
+            ['Does this site sell tickets or take commission?', 'No. Supadio Guide is a nonprofit information project and does not sell tickets, accept bookings, or build commercial rankings.'],
+            ['What if information here differs from airport signage?', 'Always prioritise operational information from the airport, airline, staff, and regulator. Fast-changing information on this site is intended as an initial guide only.']
+          ].map(([q, a]) => <details class="group rounded-2xl border border-ink/10 bg-cloud p-5"><summary class="cursor-pointer list-none pr-8 font-extrabold">{q}</summary><p class="mt-4 max-w-3xl text-sm leading-7 text-ink/68">{a}</p></details>)}
+        </div>
+      </div>
+    </section>
+
+    <section id="sumber" class="section-pad">
+      <div class="container-site grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
+        <div><p class="eyebrow text-river">Sources & methodology</p><h2 class="mt-4 text-4xl font-black tracking-[-.04em]">Prioritise primary sources. Mark what changes quickly.</h2><p class="mt-5 leading-8 text-ink/70">Airport identity, location, operator, operating status, and technical data are prioritised from the regulator. Historical sections rely on government archives. Awards use ACI. Google Maps ratings are treated as a snapshot at the time of checking, not as a fixed fact.</p></div>
+        <div class="card p-7 md:p-9">
+          <ul class="space-y-4 text-sm leading-7">
+            {officialSourcesEn.map((s) => <li><a class="font-bold text-river underline decoration-runway/60 hover:text-night" href={s.href} rel="noopener noreferrer">{s.label}</a></li>)}
+            <li><span class="font-bold">Photos:</span> PT Angkasa Pura II / Indonesian government documentation (public domain in Indonesia) and SunDawn (CC BY-SA 4.0), accessed through Wikimedia Commons. <a class="font-bold text-river underline" href="https://commons.wikimedia.org/wiki/File:Bandara-Supadio-Pontianak.webp" rel="noopener noreferrer">Main photo</a>, <a class="font-bold text-river underline" href="https://commons.wikimedia.org/wiki/File:Supadio_Airport_terminal.jpg" rel="noopener noreferrer">apron photo</a>, and <a class="font-bold text-river underline" href="https://commons.wikimedia.org/wiki/File:Supadio_International_Airport_Terminal_Interior.jpg" rel="noopener noreferrer">interior photo</a>.</li>
+            <li><span class="font-bold">Note:</span> Operating hours, tariffs, routes, outlets, transport, and review counts may change without notice. Always verify critical information before travel.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

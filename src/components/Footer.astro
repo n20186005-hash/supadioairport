@@ -1,42 +1,46 @@
 ---
 import { airport } from '../data/site';
+import { getAlternateLocale, getLocalizedPath, shellCopy, type Locale, type PageKey } from '../data/i18n';
+
+interface Props { locale?: Locale; pageKey?: PageKey; }
+const { locale = 'id', pageKey = 'home' } = Astro.props;
+const copy = shellCopy[locale].footer;
+const targetLocale = getAlternateLocale(locale);
+const switchHref = getLocalizedPath(pageKey, targetLocale);
 const supportEmail = 'claritleonelmnicol@gmail.com';
+const subject = locale === 'id' ? `Laporan Kesalahan Informasi - ${airport.projectName}` : `Factual Error Report - ${airport.projectName}`;
 ---
 <footer class="bg-night text-white">
   <div class="container-site grid gap-10 py-14 lg:grid-cols-[1.1fr_.7fr_.9fr]">
     <div>
       <img class="mb-6 rounded-lg bg-white px-3 py-2" src="/icons/logo.svg" width="205" height="50" alt={airport.projectName} />
       <div class="max-w-3xl space-y-3 text-sm leading-7 text-white/70">
-        <p>Situs ini adalah proyek panduan informasi pengunjung independen dan nirlaba, tanpa hubungan kelembagaan dengan pemerintah, pengelola bandara, maskapai, atau organisasi resmi mana pun.</p>
-        <p>Informasi destinasi diperiksa silang dengan materi publik Pemerintah Kabupaten Kubu Raya, Dinas Kepemudaan, Olahraga dan Pariwisata Provinsi Kalimantan Barat, Direktorat Jenderal Perhubungan Udara Kementerian Perhubungan, dan Kementerian Pariwisata Republik Indonesia. Situs ini tidak memuat rekomendasi komersial.</p>
-        <p>Hak cipta foto: seluruh hak dan hak cipta gambar yang ditampilkan tetap berada pada fotografer atau pemegang hak masing-masing; kredit dan lisensi dicantumkan pada bagian sumber.</p>
-        <p>© 2026 {airport.projectName}. Hak cipta dilindungi.</p>
+        {copy.disclaimer.map((line) => <p>{line}</p>)}
       </div>
     </div>
     <div class="lg:justify-self-end">
-      <p class="eyebrow mb-4 text-runway">Informasi situs</p>
+      <p class="eyebrow mb-4 text-runway">{copy.siteInfoTitle}</p>
       <div class="grid gap-3 text-sm font-semibold text-white/85">
-        <a class="hover:text-runway" href="/kebijakan-privasi/">Kebijakan Privasi</a>
-        <a class="hover:text-runway" href="/ketentuan-layanan/">Ketentuan Layanan</a>
-        <a class="hover:text-runway" href="/pengaturan-cookie/">Pengaturan Cookie</a>
-        <a class="hover:text-runway" href="/#sumber">Sumber & metodologi</a>
+        {copy.siteInfoLinks.map((link) => <a class="hover:text-runway" href={getLocalizedPath(link.pageKey, locale)}>{link.label}</a>)}
+        <a class="hover:text-runway" href={`${getLocalizedPath('home', locale)}#sumber`}>{copy.sourcesLabel}</a>
+        <a class="hover:text-runway" href={switchHref} data-locale-switch={targetLocale} aria-label={copy.languageAria}>{copy.languageLabel}</a>
       </div>
     </div>
     <div class="lg:justify-self-end">
-      <p class="eyebrow mb-4 text-runway">Umpan balik & dukungan teknis</p>
+      <p class="eyebrow mb-4 text-runway">{copy.supportTitle}</p>
       <div class="space-y-5 text-sm text-white/80">
         <div>
-          <p class="font-extrabold text-white">Laporkan kesalahan informasi</p>
-          <p class="mt-2 leading-7 text-white/65">Jika menemukan ketidaksesuaian data, informasi usang, atau kesalahan faktual, silakan sampaikan melalui surel berikut. Sertakan sumber rujukan atau konteks agar verifikasi dapat dilakukan.</p>
-          <a class="mt-3 inline-flex items-center gap-2 rounded-full border border-runway/40 bg-runway/10 px-4 py-2 font-bold text-runway hover:bg-runway/20" href={`mailto:${supportEmail}?subject=Laporan%20Kesalahan%20Informasi%20-%20${encodeURIComponent(airport.projectName)}`}>
+          <p class="font-extrabold text-white">{copy.reportTitle}</p>
+          <p class="mt-2 leading-7 text-white/65">{copy.reportBody}</p>
+          <a class="mt-3 inline-flex items-center gap-2 rounded-full border border-runway/40 bg-runway/10 px-4 py-2 font-bold text-runway hover:bg-runway/20" href={`mailto:${supportEmail}?subject=${encodeURIComponent(subject)}`}>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             {supportEmail}
           </a>
         </div>
         <div class="border-t border-white/10 pt-5">
-          <p class="font-extrabold text-white">Dukungan teknis</p>
-          <p class="mt-2 leading-7 text-white/65">Masalah tampilan, aksesibilitas, atau kendala teknis lain pada situs juga dapat dilaporkan ke alamat surel yang sama. Jelaskan secara singkat peramban, perangkat, dan langkah yang menimbulkan kendala.</p>
-          <p class="mt-3 text-xs leading-6 text-white/45">Kami memproses laporan secara berurutan dan tidak dapat menjamin balasan individual untuk setiap kiriman.</p>
+          <p class="font-extrabold text-white">{copy.technicalTitle}</p>
+          <p class="mt-2 leading-7 text-white/65">{copy.technicalBody}</p>
+          <p class="mt-3 text-xs leading-6 text-white/45">{copy.technicalNote}</p>
         </div>
       </div>
     </div>

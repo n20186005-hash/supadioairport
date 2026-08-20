@@ -3,14 +3,19 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { airport } from '../data/site';
+import { getLocalizedPath, localizedPaths, shellCopy, type Locale, type PageKey } from '../data/i18n';
 
-interface Props { title: string; description: string; image?: string; hideHeader?: boolean; }
-const { title, description, image = '/images/supadio-aircraft.webp', hideHeader = false } = Astro.props;
+interface Props { title: string; description: string; image?: string; hideHeader?: boolean; locale?: Locale; pageKey?: PageKey; }
+const { title, description, image = '/images/supadio-aircraft.webp', hideHeader = false, locale = 'id', pageKey } = Astro.props;
+const copy = shellCopy[locale];
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const absoluteImage = Astro.site ? new URL(image, Astro.site).href : image;
+const alternateId = Astro.site && pageKey ? new URL(getLocalizedPath(pageKey, 'id'), Astro.site).href : undefined;
+const alternateEn = Astro.site && pageKey ? new URL(getLocalizedPath(pageKey, 'en'), Astro.site).href : undefined;
+const localePathMap = pageKey ? localizedPaths[pageKey] : undefined;
 ---
 <!doctype html>
-<html lang="id">
+<html lang={copy.htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -24,27 +29,30 @@ const absoluteImage = Astro.site ? new URL(image, Astro.site).href : image;
     <link rel="icon" href="/icons/favicon-16.png" sizes="16x16" type="image/png" />
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
     <meta property="og:type" content="website" />
-    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale" content={copy.ogLocale} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={absoluteImage} />
     {canonical && <meta property="og:url" content={canonical} />}
+    {alternateId && <link rel="alternate" hreflang="id-ID" href={alternateId} />}
+    {alternateEn && <link rel="alternate" hreflang="en" href={alternateEn} />}
+    {alternateId && <link rel="alternate" hreflang="x-default" href={alternateId} />}
   </head>
   <body>
-    {!hideHeader && <Header />}
+    {!hideHeader && <Header locale={locale} pageKey={pageKey ?? 'home'} />}
     <slot />
-    <Footer />
-    <div id="cookie-banner" class="fixed inset-x-4 bottom-4 z-50 mx-auto hidden max-w-3xl rounded-2xl border border-white/10 bg-night p-5 text-white shadow-2xl" role="region" aria-label="Persetujuan cookie">
+    <Footer locale={locale} pageKey={pageKey} />
+    <div id="cookie-banner" class="fixed inset-x-4 bottom-4 z-50 mx-auto hidden max-w-3xl rounded-2xl border border-white/10 bg-night p-5 text-white shadow-2xl" role="region" aria-label={copy.cookieBanner.regionLabel}>
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <p class="text-sm leading-6 text-white/80">Kami memakai cookie yang diperlukan agar situs berfungsi. Google Analytics hanya dimuat setelah Anda menyetujui cookie analitik.</p>
+        <p class="text-sm leading-6 text-white/80">{copy.cookieBanner.body}</p>
         <div class="flex shrink-0 flex-wrap gap-2">
-          <button data-cookie-reject class="rounded-full border border-white/25 px-4 py-2 text-sm font-bold hover:bg-white/10">Tolak analitik</button>
-          <button data-cookie-accept class="rounded-full bg-runway px-4 py-2 text-sm font-bold text-night hover:brightness-110">Izinkan analitik</button>
-          <a class="rounded-full px-3 py-2 text-sm font-bold underline" href="/pengaturan-cookie/">Atur</a>
+          <button data-cookie-reject class="rounded-full border border-white/25 px-4 py-2 text-sm font-bold hover:bg-white/10">{copy.cookieBanner.reject}</button>
+          <button data-cookie-accept class="rounded-full bg-runway px-4 py-2 text-sm font-bold text-night hover:brightness-110">{copy.cookieBanner.accept}</button>
+          <a class="rounded-full px-3 py-2 text-sm font-bold underline" href={pageKey ? getLocalizedPath('cookies', locale) : '/pengaturan-cookie/'}>{copy.cookieBanner.manage}</a>
         </div>
       </div>
     </div>
-    <script define:vars={{ gaId: airport.gaId }}>window.SUPADIO_GA_ID = gaId;</script>
-    <script src="/js/consent.js" defer></script>
+    <script is:inline define:vars={{ gaId: airport.gaId, locale, localePathMap }}>window.SUPADIO_GA_ID = gaId; (() => { const key = 'supadio_locale'; try { const saved = window.localStorage.getItem(key); if (saved === 'id' || saved === 'en') { if (localePathMap && saved !== locale) { const nextPath = localePathMap[saved]; if (nextPath && nextPath !== window.location.pathname) { window.location.replace(nextPath + window.location.search + window.location.hash); return; } } } } catch {} document.addEventListener('click', (event) => { const target = event.target; if (!(target instanceof Element)) return; const switcher = target.closest('[data-locale-switch]'); if (!switcher) return; const nextLocale = switcher.getAttribute('data-locale-switch'); if (nextLocale === 'id' || nextLocale === 'en') { try { window.localStorage.setItem(key, nextLocale); } catch {} } }); })();</script>
+    <script is:inline src="/js/consent.js" defer></script>
   </body>
 </html>

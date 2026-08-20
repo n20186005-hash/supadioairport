@@ -1,17 +1,31 @@
 ---
 import { airport } from '../data/site';
+import { getAlternateLocale, getLocalizedPath, shellCopy, type Locale, type PageKey } from '../data/i18n';
+
+interface Props { locale?: Locale; pageKey?: PageKey; }
+const { locale = 'id', pageKey = 'home' } = Astro.props;
+const copy = shellCopy[locale].header;
+const homePath = getLocalizedPath('home', locale);
+const targetLocale = getAlternateLocale(locale);
+const switchHref = getLocalizedPath(pageKey, targetLocale);
 ---
 <header class="absolute inset-x-0 top-0 z-40 text-white">
   <div class="container-site flex items-center justify-between gap-6 py-5">
-    <a href="/" class="focus-ring rounded-xl bg-white/95 px-3 py-2 shadow-lg" aria-label={`${airport.projectName} — beranda`}>
+    <a href={homePath} class="focus-ring rounded-xl bg-white/95 px-3 py-2 shadow-lg" aria-label={`${airport.projectName} — ${copy.homeLabel.toLowerCase()}`}>
       <img src="/icons/logo.svg" width="205" height="50" alt={airport.projectName} />
     </a>
-    <nav class="hidden items-center gap-6 rounded-full border border-white/20 bg-night/45 px-6 py-3 text-sm font-semibold backdrop-blur md:flex" aria-label="Navigasi utama">
-      <a class="hover:text-runway" href="/#kenali">Kenali</a>
-      <a class="hover:text-runway" href="/#transportasi">Transportasi</a>
-      <a class="hover:text-runway" href="/#fasilitas">Fasilitas</a>
-      <a class="hover:text-runway" href="/#sekitar">Sekitar</a>
-      <a class="hover:text-runway" href="/#faq">Tanya jawab</a>
-    </nav>
+    <div class="flex items-center gap-3">
+      <nav class="hidden items-center gap-6 rounded-full border border-white/20 bg-night/45 px-6 py-3 text-sm font-semibold backdrop-blur md:flex" aria-label={copy.ariaLabel}>
+        {copy.links.map((link) => <a class="hover:text-runway" href={`${homePath}#${link.id}`}>{link.label}</a>)}
+      </nav>
+      <a
+        href={switchHref}
+        data-locale-switch={targetLocale}
+        class="focus-ring inline-flex min-w-14 items-center justify-center rounded-full border border-white/20 bg-night/45 px-4 py-3 text-sm font-extrabold tracking-[.16em] backdrop-blur hover:text-runway"
+        aria-label={copy.switchAria}
+      >
+        {copy.switchLabel}
+      </a>
+    </div>
   </div>
 </header>
