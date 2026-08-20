@@ -1,0 +1,25 @@
+---
+import { airport } from '../data/site';
+---
+<footer class="bg-night text-white">
+  <div class="container-site grid gap-10 py-14 lg:grid-cols-[1.2fr_.8fr]">
+    <div>
+      <img class="mb-6 rounded-lg bg-white px-3 py-2" src="/icons/logo.svg" width="205" height="50" alt={airport.projectName} />
+      <div class="max-w-3xl space-y-3 text-sm leading-7 text-white/70">
+        <p>Situs ini adalah proyek panduan informasi pengunjung independen dan nirlaba, tanpa hubungan kelembagaan dengan pemerintah, pengelola bandara, maskapai, atau organisasi resmi mana pun.</p>
+        <p>Informasi destinasi diperiksa silang dengan materi publik Pemerintah Kabupaten Kubu Raya, Dinas Kepemudaan, Olahraga dan Pariwisata Provinsi Kalimantan Barat, Direktorat Jenderal Perhubungan Udara Kementerian Perhubungan, dan Kementerian Pariwisata Republik Indonesia. Situs ini tidak memuat rekomendasi komersial.</p>
+        <p>Hak cipta foto: seluruh hak dan hak cipta gambar yang ditampilkan tetap berada pada fotografer atau pemegang hak masing-masing; kredit dan lisensi dicantumkan pada bagian sumber.</p>
+        <p>© 2026 {airport.projectName}. Hak cipta dilindungi.</p>
+      </div>
+    </div>
+    <div class="lg:justify-self-end">
+      <p class="eyebrow mb-4 text-runway">Informasi situs</p>
+      <div class="grid gap-3 text-sm font-semibold text-white/85">
+        <a class="hover:text-runway" href="/kebijakan-privasi/">Kebijakan Privasi</a>
+        <a class="hover:text-runway" href="/ketentuan-layanan/">Ketentuan Layanan</a>
+        <a class="hover:text-runway" href="/pengaturan-cookie/">Pengaturan Cookie</a>
+        <a class="hover:text-runway" href="/#sumber">Sumber & metodologi</a>
+      </div>
+    </div>
+  </div>
+</footer>

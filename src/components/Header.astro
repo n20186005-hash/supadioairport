@@ -1,0 +1,17 @@
+---
+import { airport } from '../data/site';
+---
+<header class="absolute inset-x-0 top-0 z-40 text-white">
+  <div class="container-site flex items-center justify-between gap-6 py-5">
+    <a href="/" class="focus-ring rounded-xl bg-white/95 px-3 py-2 shadow-lg" aria-label={`${airport.projectName} — beranda`}>
+      <img src="/icons/logo.svg" width="205" height="50" alt={airport.projectName} />
+    </a>
+    <nav class="hidden items-center gap-6 rounded-full border border-white/20 bg-night/45 px-6 py-3 text-sm font-semibold backdrop-blur md:flex" aria-label="Navigasi utama">
+      <a class="hover:text-runway" href="/#kenali">Kenali</a>
+      <a class="hover:text-runway" href="/#transportasi">Transportasi</a>
+      <a class="hover:text-runway" href="/#fasilitas">Fasilitas</a>
+      <a class="hover:text-runway" href="/#sekitar">Sekitar</a>
+      <a class="hover:text-runway" href="/#faq">Tanya jawab</a>
+    </nav>
+  </div>
+</header>
