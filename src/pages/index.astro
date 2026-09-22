@@ -29,13 +29,14 @@ const structuredData = {
         ['Apakah tersedia parkir?', 'Tersedia area parkir bandara untuk kendaraan. Tarif, zona, dan ketentuan dapat berubah; gunakan papan tarif dan petunjuk resmi di area parkir sebagai rujukan utama.'],
         ['Berapa lama sebaiknya berada di bandara?', 'Untuk penerbangan, ikuti batas waktu lapor masuk dari maskapai dan tambahkan waktu untuk lalu lintas, parkir, pemeriksaan keamanan, dan antrean. Untuk orientasi area publik tanpa penerbangan, sekitar 45–90 menit biasanya cukup.'],
         ['Apakah transportasi umum selalu tersedia?', 'Ketersediaan bus atau layanan antar-jemput dapat berubah menurut operator dan waktu. Situs ini tidak menampilkan jadwal tetap yang belum terverifikasi; konfirmasikan layanan pada hari perjalanan.'],
-        ['Di mana letak Bandara Supadio?', 'Bandara berada di Limbung, Kecamatan Sungai Raya, Kabupaten Kubu Raya, Kalimantan Barat, di koridor utama menuju Pontianak.']
+        ['Di mana letak Bandara Supadio?', 'Bandara berada di Limbung, Kecamatan Sungai Raya, Kabupaten Kubu Raya, Kalimantan Barat, di koridor utama menuju Pontianak.'],
+        ['Apa kode bandara Supadio?', `Kode IATA bandara adalah ${airport.iata} dan kode ICAO adalah ${airport.icao}. Gunakan ${airport.iata} saat mencari atau memesan penerbangan, serta ${airport.icao} untuk rujukan penerbangan dan teknis.`]
       ].map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } }))
     }
   ]
 };
 ---
-<BaseLayout locale="id" pageKey="home" title="Panduan Bandara Supadio — Informasi Pengunjung Kubu Raya" description="Panduan independen dan nirlaba untuk Bandara Internasional Supadio: sejarah, transportasi, fasilitas, parkir, biaya, peta, dan informasi sekitar Kubu Raya–Pontianak.">
+<BaseLayout locale="id" pageKey="home" title="Bandara Supadio (PNK) Pontianak — Panduan Wisata | Penerbangan, Fasilitas & Transportasi" description="Panduan lengkap Bandara Udara Supadio (PNK) Pontianak: jam operasi 06.00–20.00 WIB, transportasi dari kota, fasilitas terminal, parkir, dan sekitar Kubu Raya, Kalimantan Barat.">
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
   <main>
@@ -230,7 +231,8 @@ const structuredData = {
             ['Apakah tersedia parkir?','Ya, terdapat area parkir kawasan bandara. Gunakan zona resmi dan lihat papan tarif terbaru di lokasi.'],
             ['Kapan sebaiknya tiba?','Ikuti ketentuan lapor masuk maskapai lalu tambahkan waktu untuk perjalanan darat, parkir, pemeriksaan keamanan, serta potensi antrean.'],
             ['Apakah situs ini menjual tiket atau menerima komisi?','Tidak. Panduan Supadio adalah proyek informasi nirlaba dan tidak menjual tiket, menerima pemesanan, atau membuat peringkat komersial.'],
-            ['Bagaimana jika data di sini berbeda dengan papan bandara?','Utamakan informasi operasional dari bandara, maskapai, petugas, dan regulator. Informasi yang mudah berubah di situs ini selalu dimaksudkan sebagai panduan awal.']
+            ['Bagaimana jika data di sini berbeda dengan papan bandara?','Utamakan informasi operasional dari bandara, maskapai, petugas, dan regulator. Informasi yang mudah berubah di situs ini selalu dimaksudkan sebagai panduan awal.'],
+            ['Apa kode bandara Supadio?', `Kode IATA adalah ${airport.iata} (PNK) dan kode ICAO adalah ${airport.icao} (WIOO). Gunakan PNK saat mencari atau memesan penerbangan.`]
           ].map(([q,a]) => <details class="group rounded-2xl border border-ink/10 bg-cloud p-5"><summary class="cursor-pointer list-none pr-8 font-extrabold">{q}</summary><p class="mt-4 max-w-3xl text-sm leading-7 text-ink/68">{a}</p></details>)}
         </div>
       </div>

@@ -38,13 +38,14 @@ const structuredData = {
         ['Is parking available?', 'Yes. Parking areas are available within the airport complex. Rates, zones, and rules may change, so use official on-site signage as the primary reference.'],
         ['How early should I be at the airport?', 'For flights, follow your airline check-in deadline and add time for traffic, parking, security screening, and queues. For a short orientation visit to the public area, around 45-90 minutes is usually enough.'],
         ['Is public transport always available?', 'Bus or shuttle availability depends on the operator and time of day. This site does not publish unverified fixed schedules; confirm service availability on the day of travel.'],
-        ['Where is Supadio Airport located?', 'The airport is in Limbung, Sungai Raya District, Kubu Raya Regency, West Kalimantan, on the main corridor leading to Pontianak.']
+        ['Where is Supadio Airport located?', 'The airport is in Limbung, Sungai Raya District, Kubu Raya Regency, West Kalimantan, on the main corridor leading to Pontianak.'],
+        ['What is the Supadio airport code?', `The IATA code is ${airport.iata} and the ICAO code is ${airport.icao}. Use ${airport.iata} when searching for or booking flights, and ${airport.icao} for aviation or technical references.`]
       ].map(([name, text]) => ({ '@type': 'Question', name, acceptedAnswer: { '@type': 'Answer', text } }))
     }
   ]
 };
 ---
-<BaseLayout locale="en" pageKey="home" title="Supadio Airport Guide - Visitor Information for Kubu Raya" description="An independent nonprofit guide to Supadio International Airport: history, transport, facilities, parking, costs, maps, and practical context for Kubu Raya and Pontianak.">
+<BaseLayout locale="en" pageKey="home" title="Supadio Airport (PNK) Pontianak — Travel Guide | Flights, Transport & Facilities" description="Visitor guide to Supadio International Airport (PNK) in Pontianak: operating hours, transport from the city, terminal facilities, parking, and nearby West Kalimantan.">
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
   <main>
@@ -239,7 +240,8 @@ const structuredData = {
             ['Is parking available?', 'Yes. Parking areas are available within the airport complex. Use official zones and check the latest on-site tariff signs.'],
             ['When should I arrive?', 'Follow your airline check-in deadline and add time for the road journey, parking, security screening, and possible queues.'],
             ['Does this site sell tickets or take commission?', 'No. Supadio Guide is a nonprofit information project and does not sell tickets, accept bookings, or build commercial rankings.'],
-            ['What if information here differs from airport signage?', 'Always prioritise operational information from the airport, airline, staff, and regulator. Fast-changing information on this site is intended as an initial guide only.']
+            ['What if information here differs from airport signage?', 'Always prioritise operational information from the airport, airline, staff, and regulator. Fast-changing information on this site is intended as an initial guide only.'],
+            ['What is the Supadio airport code?', `The IATA code is ${airport.iata} (PNK) and the ICAO code is ${airport.icao} (WIOO). Use PNK when searching for or booking flights.`]
           ].map(([q, a]) => <details class="group rounded-2xl border border-ink/10 bg-cloud p-5"><summary class="cursor-pointer list-none pr-8 font-extrabold">{q}</summary><p class="mt-4 max-w-3xl text-sm leading-7 text-ink/68">{a}</p></details>)}
         </div>
       </div>

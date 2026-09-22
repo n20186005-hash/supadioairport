@@ -2,12 +2,13 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { airport } from '../data/site';
+import { airport, siteName, withSiteName } from '../data/site';
 import { getLocalizedPath, localizedPaths, shellCopy, type Locale, type PageKey } from '../data/i18n';
 
 interface Props { title: string; description: string; image?: string; hideHeader?: boolean; locale?: Locale; pageKey?: PageKey; }
 const { title, description, image = '/images/supadio-aircraft.webp', hideHeader = false, locale = 'id', pageKey } = Astro.props;
 const copy = shellCopy[locale];
+const finalTitle = pageKey === 'home' ? title : withSiteName(title, locale);
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const absoluteImage = Astro.site ? new URL(image, Astro.site).href : image;
 const alternateId = Astro.site && pageKey ? new URL(getLocalizedPath(pageKey, 'id'), Astro.site).href : undefined;
@@ -22,7 +23,7 @@ const localePathMap = pageKey ? localizedPaths[pageKey] : undefined;
     <meta name="description" content={description} />
     <meta name="theme-color" content="#071a22" />
     <meta name="robots" content="index,follow,max-image-preview:large" />
-    <title>{title}</title>
+    <title>{finalTitle}</title>
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" type="image/png" />
@@ -30,7 +31,8 @@ const localePathMap = pageKey ? localizedPaths[pageKey] : undefined;
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={copy.ogLocale} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={finalTitle} />
+    <meta property="og:site_name" content={siteName[locale]} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={absoluteImage} />
     {canonical && <meta property="og:url" content={canonical} />}

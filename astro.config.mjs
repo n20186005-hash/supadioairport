@@ -4,7 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // Satu-satunya tempat untuk mengatur domain produksi.
 // Isi dengan URL final, misalnya domain milik proyek, lalu build ulang.
-const siteUrl = '';
+// Diisi agar canonical, og:url, hreflang, dan sitemap ikut terbit.
+const siteUrl = 'https://supadioairport.com';
 
 export default defineConfig({
   site: siteUrl || undefined,

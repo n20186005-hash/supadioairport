@@ -23,3 +23,13 @@ export const officialSources = [
   { label: 'Pemerintah Kabupaten Kubu Raya', href: 'https://kuburayakab.go.id/' },
   { label: 'ACI Asia-Pacific & Middle East — ASQ Awards', href: 'https://www.aci-asiapac.aero/media-centre/news/35-airports-from-asia-pacific-and-middle-east-win-68-asq-awards-for-service-excellence' }
 ] as const;
+
+// Format nama SEO: "Nama objek + Kota + Panduan Wisata".
+export const siteName = {
+  id: 'Bandara Supadio (PNK) Pontianak — Panduan Wisata',
+  en: 'Supadio Airport (PNK) Pontianak — Travel Guide'
+} as const;
+
+export function withSiteName(title: string, locale: 'id' | 'en'): string {
+  return `${title} | ${siteName[locale]}`;
+}
