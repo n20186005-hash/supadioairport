@@ -1,48 +1,7 @@
 ---
-import { airport } from '../data/site';
-import { getAlternateLocale, getLocalizedPath, shellCopy, type Locale, type PageKey } from '../data/i18n';
-
+import { getLocalizedPath, shellCopy, type Locale, type PageKey } from '../data/i18n';
 interface Props { locale?: Locale; pageKey?: PageKey; }
-const { locale = 'id', pageKey = 'home' } = Astro.props;
+const { locale = 'id' } = Astro.props;
 const copy = shellCopy[locale].footer;
-const targetLocale = getAlternateLocale(locale);
-const switchHref = getLocalizedPath(pageKey, targetLocale);
-const supportEmail = 'claritleonelmnicol@gmail.com';
-const subject = locale === 'id' ? `Laporan Kesalahan Informasi - ${airport.projectName}` : `Factual Error Report - ${airport.projectName}`;
 ---
-<footer class="bg-night text-white">
-  <div class="container-site grid gap-10 py-14 lg:grid-cols-[1.1fr_.7fr_.9fr]">
-    <div>
-      <img class="mb-6 rounded-lg bg-white px-3 py-2" src="/icons/logo.svg" width="205" height="50" alt={airport.projectName} />
-      <div class="max-w-3xl space-y-3 text-sm leading-7 text-white/70">
-        {copy.disclaimer.map((line) => <p>{line}</p>)}
-      </div>
-    </div>
-    <div class="lg:justify-self-end">
-      <p class="eyebrow mb-4 text-runway">{copy.siteInfoTitle}</p>
-      <div class="grid gap-3 text-sm font-semibold text-white/85">
-        {copy.siteInfoLinks.map((link) => <a class="hover:text-runway" href={getLocalizedPath(link.pageKey, locale)}>{link.label}</a>)}
-        <a class="hover:text-runway" href={`${getLocalizedPath('home', locale)}#sumber`}>{copy.sourcesLabel}</a>
-        <a class="hover:text-runway" href={switchHref} data-locale-switch={targetLocale} aria-label={copy.languageAria}>{copy.languageLabel}</a>
-      </div>
-    </div>
-    <div class="lg:justify-self-end">
-      <p class="eyebrow mb-4 text-runway">{copy.supportTitle}</p>
-      <div class="space-y-5 text-sm text-white/80">
-        <div>
-          <p class="font-extrabold text-white">{copy.reportTitle}</p>
-          <p class="mt-2 leading-7 text-white/65">{copy.reportBody}</p>
-          <a class="mt-3 inline-flex items-center gap-2 rounded-full border border-runway/40 bg-runway/10 px-4 py-2 font-bold text-runway hover:bg-runway/20" href={`mailto:${supportEmail}?subject=${encodeURIComponent(subject)}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            {supportEmail}
-          </a>
-        </div>
-        <div class="border-t border-white/10 pt-5">
-          <p class="font-extrabold text-white">{copy.technicalTitle}</p>
-          <p class="mt-2 leading-7 text-white/65">{copy.technicalBody}</p>
-          <p class="mt-3 text-xs leading-6 text-white/45">{copy.technicalNote}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
+<footer class="bg-night text-white"><div class="container-site grid gap-8 py-12 lg:grid-cols-[1.2fr_.8fr]"><div><p class="text-xl font-extrabold">{locale === 'en' ? 'Supadio independent guide' : 'Panduan Supadio independen'}</p><p class="mt-4 max-w-3xl leading-8 text-white/75">{locale === 'en' ? 'Independent visitor information with no affiliation to the airport operator, airlines or government. No flight-status feed, ticket sales, bookings, account or contact form is provided.' : 'Informasi pengunjung independen tanpa afiliasi dengan pengelola bandara, maskapai atau pemerintah. Tidak menyediakan data status penerbangan, penjualan tiket, pemesanan, akun atau formulir kontak.'}</p><p class="mt-4 text-sm text-white/65">{locale === 'en' ? 'Sources checked 19 October 2026. Photo rights follow the individual source licences.' : 'Sumber diperiksa 19 Oktober 2026. Hak foto mengikuti lisensi sumber masing-masing.'}</p></div><nav aria-label={copy.siteInfoTitle} class="grid gap-2">{copy.siteInfoLinks.map(link => <a href={getLocalizedPath(link.pageKey,locale)}>{link.label}</a>)}<a href={`${getLocalizedPath('home',locale)}#sumber`}>{copy.sourcesLabel}</a></nav></div></footer>

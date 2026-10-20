@@ -2,27 +2,27 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { airport, siteName, withSiteName } from '../data/site';
-import { getLocalizedPath, localizedPaths, shellCopy, type Locale, type PageKey } from '../data/i18n';
+import { siteName, withSiteName } from '../data/site';
+import { getLocalizedPath, shellCopy, type Locale, type PageKey } from '../data/i18n';
 
-interface Props { title: string; description: string; image?: string; hideHeader?: boolean; locale?: Locale; pageKey?: PageKey; }
-const { title, description, image = '/images/supadio-aircraft.webp', hideHeader = false, locale = 'id', pageKey } = Astro.props;
+interface Props { title: string; description: string; image?: string; noIndex?: boolean; hideHeader?: boolean; locale?: Locale; pageKey?: PageKey; }
+const { title, description, image = '/images/supadio-aircraft.webp', hideHeader = false, locale = 'id', pageKey, noIndex = false } = Astro.props;
 const copy = shellCopy[locale];
 const finalTitle = pageKey === 'home' ? title : withSiteName(title, locale);
-const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const canonical = Astro.site && !noIndex ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const absoluteImage = Astro.site ? new URL(image, Astro.site).href : image;
-const alternateId = Astro.site && pageKey ? new URL(getLocalizedPath(pageKey, 'id'), Astro.site).href : undefined;
-const alternateEn = Astro.site && pageKey ? new URL(getLocalizedPath(pageKey, 'en'), Astro.site).href : undefined;
-const localePathMap = pageKey ? localizedPaths[pageKey] : undefined;
+const alternateId = Astro.site && pageKey && !noIndex ? new URL(getLocalizedPath(pageKey, 'id'), Astro.site).href : undefined;
+const alternateEn = Astro.site && pageKey && !noIndex ? new URL(getLocalizedPath(pageKey, 'en'), Astro.site).href : undefined;
+
 ---
 <!doctype html>
 <html lang={copy.htmlLang}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#071a22" />
-    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="robots" content={noIndex ? "noindex,follow" : "index,follow,max-image-preview:large"} />
     <title>{finalTitle}</title>
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/icons/favicon.svg" type="image/svg+xml" />
@@ -32,6 +32,9 @@ const localePathMap = pageKey ? localizedPaths[pageKey] : undefined;
     <meta property="og:type" content="website" />
     <meta property="og:locale" content={copy.ogLocale} />
     <meta property="og:title" content={finalTitle} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={finalTitle} />
+    <meta name="twitter:description" content={description} />
     <meta property="og:site_name" content={siteName[locale]} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={absoluteImage} />
@@ -41,10 +44,11 @@ const localePathMap = pageKey ? localizedPaths[pageKey] : undefined;
     {alternateId && <link rel="alternate" hreflang="x-default" href={alternateId} />}
   </head>
   <body>
+    <a href="#konten" class="skip-link">{locale === "en" ? "Skip to content" : "Lewati ke konten"}</a>
     {!hideHeader && <Header locale={locale} pageKey={pageKey ?? 'home'} />}
     <slot />
     <Footer locale={locale} pageKey={pageKey} />
-    <div id="cookie-banner" class="fixed inset-x-4 bottom-4 z-50 mx-auto hidden max-w-3xl rounded-2xl border border-white/10 bg-night p-5 text-white shadow-2xl" role="region" aria-label={copy.cookieBanner.regionLabel}>
+    <div id="cookie-banner" class="fixed inset-x-4 bottom-4 z-50 mx-auto hidden max-h-[calc(100svh-2rem)] overflow-auto max-w-3xl rounded-2xl border border-white/10 bg-night p-5 text-white shadow-2xl" role="region" aria-label={copy.cookieBanner.regionLabel}>
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <p class="text-sm leading-6 text-white/80">{copy.cookieBanner.body}</p>
         <div class="flex shrink-0 flex-wrap gap-2">
@@ -53,8 +57,8 @@ const localePathMap = pageKey ? localizedPaths[pageKey] : undefined;
           <a class="rounded-full px-3 py-2 text-sm font-bold underline" href={pageKey ? getLocalizedPath('cookies', locale) : '/pengaturan-cookie/'}>{copy.cookieBanner.manage}</a>
         </div>
       </div>
+      <p data-consent-status role="status" aria-live="polite" class="mt-3 text-sm"></p>
     </div>
-    <script is:inline define:vars={{ gaId: airport.gaId, locale, localePathMap }}>window.SUPADIO_GA_ID = gaId; (() => { const key = 'supadio_locale'; try { const saved = window.localStorage.getItem(key); if (saved === 'id' || saved === 'en') { if (localePathMap && saved !== locale) { const nextPath = localePathMap[saved]; if (nextPath && nextPath !== window.location.pathname) { window.location.replace(nextPath + window.location.search + window.location.hash); return; } } } } catch {} document.addEventListener('click', (event) => { const target = event.target; if (!(target instanceof Element)) return; const switcher = target.closest('[data-locale-switch]'); if (!switcher) return; const nextLocale = switcher.getAttribute('data-locale-switch'); if (nextLocale === 'id' || nextLocale === 'en') { try { window.localStorage.setItem(key, nextLocale); } catch {} } }); })();</script>
     <script is:inline src="/js/consent.js" defer></script>
   </body>
 </html>
