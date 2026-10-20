@@ -10,7 +10,8 @@ const siteUrl = 'https://supadioairport.com';
 export default defineConfig({
   site: siteUrl || undefined,
   output: 'static',
-  integrations: siteUrl ? [sitemap()] : [],
+  trailingSlash: 'always',
+  integrations: siteUrl ? [sitemap({ filter: (page) => !/\/404(?:\.html)?\/?$/.test(page) })] : [],
   vite: {
     plugins: [tailwindcss()]
   }

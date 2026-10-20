@@ -43,22 +43,16 @@ export const shellCopy = {
       sourcesLabel: 'Sumber & metodologi',
       languageLabel: 'English',
       languageAria: 'Beralih ke bahasa Inggris',
-      supportTitle: 'Umpan balik & dukungan teknis',
-      reportTitle: 'Laporkan kesalahan informasi',
-      reportBody: 'Jika menemukan ketidaksesuaian data, informasi usang, atau kesalahan faktual, silakan sampaikan melalui surel berikut. Sertakan sumber rujukan atau konteks agar verifikasi dapat dilakukan.',
-      technicalTitle: 'Dukungan teknis',
-      technicalBody: 'Masalah tampilan, aksesibilitas, atau kendala teknis lain pada situs juga dapat dilaporkan ke alamat surel yang sama. Jelaskan secara singkat peramban, perangkat, dan langkah yang menimbulkan kendala.',
-      technicalNote: 'Kami memproses laporan secara berurutan dan tidak dapat menjamin balasan individual untuk setiap kiriman.',
       disclaimer: [
         'Situs ini adalah proyek panduan informasi pengunjung independen dan nirlaba, tanpa hubungan kelembagaan dengan pemerintah, pengelola bandara, maskapai, atau organisasi resmi mana pun.',
-        'Informasi destinasi diperiksa silang dengan materi publik Pemerintah Kabupaten Kubu Raya, Dinas Kepemudaan, Olahraga dan Pariwisata Provinsi Kalimantan Barat, Direktorat Jenderal Perhubungan Udara Kementerian Perhubungan, dan Kementerian Pariwisata Republik Indonesia. Situs ini tidak memuat rekomendasi komersial.',
+        'Rujukan publik: profil Hubud Kemenhub, arsip Sekretariat Negara dan TNI AU, serta cuplikan lokasi Google Maps.',
         'Hak cipta foto: seluruh hak dan hak cipta gambar yang ditampilkan tetap berada pada fotografer atau pemegang hak masing-masing; kredit dan lisensi dicantumkan pada bagian sumber.',
         '© 2026 Panduan Supadio. Hak cipta dilindungi.'
       ]
     },
     cookieBanner: {
       regionLabel: 'Persetujuan cookie',
-      body: 'Kami memakai cookie yang diperlukan agar situs berfungsi. Google Analytics hanya dimuat setelah Anda menyetujui cookie analitik.',
+      body: 'Analitik bersifat opsional dan nonaktif secara bawaan. Pilihan Anda disimpan pada peramban ini.',
       reject: 'Tolak analitik',
       accept: 'Izinkan analitik',
       manage: 'Atur'
@@ -90,22 +84,16 @@ export const shellCopy = {
       sourcesLabel: 'Sources & methodology',
       languageLabel: 'Bahasa Indonesia',
       languageAria: 'Switch to Indonesian',
-      supportTitle: 'Feedback & technical support',
-      reportTitle: 'Report factual errors',
-      reportBody: 'If you find outdated information, factual inaccuracies, or inconsistent details, please report them by email. Including a source or brief context will help verification.',
-      technicalTitle: 'Technical support',
-      technicalBody: 'Display issues, accessibility problems, or other technical difficulties on the site may also be reported to the same address. Please mention your browser, device, and the steps that caused the issue.',
-      technicalNote: 'Reports are handled in sequence, and individual replies cannot be guaranteed for every submission.',
       disclaimer: [
         'This site is an independent, nonprofit visitor information project with no institutional affiliation to government bodies, airport operators, airlines, or any official organization.',
-        'Destination information is cross-checked against public materials from the Kubu Raya Regency Government, the West Kalimantan Youth, Sports and Tourism Office, the Directorate General of Civil Aviation of the Ministry of Transportation, and the Ministry of Tourism of the Republic of Indonesia. The site carries no commercial recommendations.',
+        'Public references include the Hubud Kemenhub profile, State Secretariat and Air Force archives, and a Google Maps location snapshot.',
         'Photo copyright remains with the respective photographers or rights holders; credits and licenses are listed in the sources section.',
         '© 2026 Supadio Guide. All rights reserved.'
       ]
     },
     cookieBanner: {
       regionLabel: 'Cookie consent',
-      body: 'We use essential cookies to keep the site working. Google Analytics is loaded only after you approve analytics cookies.',
+      body: 'Analytics is optional and off by default. Your choices are stored in this browser.',
       reject: 'Reject analytics',
       accept: 'Allow analytics',
       manage: 'Manage'

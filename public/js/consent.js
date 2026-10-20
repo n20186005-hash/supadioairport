@@ -1,40 +1,64 @@
 (() => {
-  const KEY = 'supadio_cookie_preferences';
-  const gaId = window.SUPADIO_GA_ID;
-  const defaults = { necessary: true, analytics: false, preferences: false, marketing: false };
-  let gaLoaded = false;
-
+  const key = 'supadio_cookie_preferences', deniedKey = 'supadio_analytics_denied', gaId = 'G-HXM22WWPKP';
+  const en = document.documentElement.lang === 'en';
+  const messages = en ? {
+    on: 'Analytics allowed in this browser.', off: 'Analytics rejected in this browser.',
+    session: 'Analytics is off for this tab, including navigation and refresh. The permanent choice could not be saved and the old choice may remain. Clear site data in browser settings to remove stored permission.',
+    page: 'Analytics is off on this page. Storage is unavailable; clear site data in browser settings before navigating or refreshing.'
+  } : {
+    on: 'Analitik diizinkan pada peramban ini.', off: 'Analitik ditolak pada peramban ini.',
+    session: 'Analitik dinonaktifkan untuk tab ini, termasuk perpindahan halaman dan pemuatan ulang. Pilihan permanen gagal disimpan dan pilihan lama mungkin masih ada. Hapus data situs melalui pengaturan peramban untuk menarik izin tersimpan.',
+    page: 'Analitik dinonaktifkan pada halaman ini. Penyimpanan tidak tersedia; hapus data situs melalui pengaturan peramban sebelum berpindah atau memuat ulang.'
+  };
   function read() {
-    try { const raw = localStorage.getItem(KEY); return raw ? { ...defaults, ...JSON.parse(raw) } : null; }
-    catch { return null; }
+    try {
+      const raw = JSON.parse(localStorage.getItem(key) || 'null');
+      const denied = window.__supadioDenied || sessionStorage.getItem(deniedKey) === '1';
+      return { analytics: !denied && raw?.analytics === true, decided: denied || typeof raw?.analytics === 'boolean' };
+    } catch { return { analytics: false, decided: false }; }
   }
-  function loadAnalytics() {
-    if (gaLoaded || !gaId) return;
-    gaLoaded = true;
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function(){ window.dataLayer.push(arguments); };
-    window.gtag('js', new Date());
-    window.gtag('config', gaId, { anonymize_ip: true });
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`;
-    s.dataset.service = 'google-analytics';
-    document.head.appendChild(s);
+  function denySession() {
+    window.__supadioDenied = true; window['ga-disable-' + gaId] = true;
+    try { sessionStorage.setItem(deniedKey, '1'); return true; } catch { return false; }
   }
-  function apply(prefs) { if (prefs?.analytics) loadAnalytics(); }
-  function save(prefs) {
-    localStorage.setItem(KEY, JSON.stringify({ ...defaults, ...prefs, necessary: true, marketing: false }));
-    document.getElementById('cookie-banner')?.classList.add('hidden');
-    apply(read());
-    window.dispatchEvent(new CustomEvent('supadio:consent-changed', { detail: read() }));
+  function apply() {
+    const allowed = read().analytics; window['ga-disable-' + gaId] = !allowed;
+    if (!allowed) {
+      if (window.gtag) window.gtag('consent', 'update', { analytics_storage: 'denied' });
+      for (const part of document.cookie.split(';')) {
+        const name = part.split('=')[0].trim();
+        if (/^_ga(?:_|$)/.test(name)) for (const domain of ['', '; domain=' + location.hostname, '; domain=.supadioairport.com']) document.cookie = name + '=; Max-Age=0; path=/' + domain;
+      }
+      return;
+    }
+    if (window.__supadioLoaded) return;
+    window.__supadioLoaded = true; window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date()); window.gtag('config', gaId);
+    const script = document.createElement('script'); script.async = true;
+    script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId; document.head.appendChild(script);
   }
-
-  window.SupadioConsent = { read, save, defaults };
-  document.addEventListener('DOMContentLoaded', () => {
-    const prefs = read();
-    const banner = document.getElementById('cookie-banner');
-    if (!prefs) banner?.classList.remove('hidden'); else apply(prefs);
-    document.querySelector('[data-cookie-accept]')?.addEventListener('click', () => save({ analytics: true }));
-    document.querySelector('[data-cookie-reject]')?.addEventListener('click', () => save({ analytics: false }));
-  });
+  function save(value) {
+    value = value === true; let sessionDenied = false, saved = false;
+    if (!value) sessionDenied = denySession();
+    try {
+      localStorage.setItem(key, JSON.stringify({ analytics: value }));
+      if (value) { sessionStorage.removeItem(deniedKey); window.__supadioDenied = false; }
+      saved = true;
+    } catch { sessionDenied = denySession() || sessionDenied; }
+    apply();
+    const result = { saved, analytics: read().analytics, message: saved ? (value ? messages.on : messages.off) : (sessionDenied ? messages.session : messages.page) };
+    document.querySelectorAll('[data-consent-status]').forEach(node => { node.textContent = result.message; });
+    const checkbox = document.getElementById('analytics'); if (checkbox) checkbox.checked = result.analytics;
+    const banner = document.getElementById('cookie-banner'); if (saved) banner?.classList.add('hidden');
+    return result;
+  }
+  window.SupadioConsent = { read, save };
+  apply();
+  const checkbox = document.getElementById('analytics'); if (checkbox) checkbox.checked = read().analytics;
+  if (!read().decided) document.getElementById('cookie-banner')?.classList.remove('hidden');
+  document.querySelectorAll('[data-cookie-accept]').forEach(node => node.addEventListener('click', () => save(true)));
+  document.querySelectorAll('[data-cookie-reject]').forEach(node => node.addEventListener('click', () => save(false)));
+  document.getElementById('cookie-settings')?.addEventListener('submit', event => { event.preventDefault(); save(checkbox?.checked === true); });
+  window.addEventListener('storage', apply);
 })();
