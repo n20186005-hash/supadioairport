@@ -97,7 +97,11 @@
         retained = denySession();
       }
     }
-    const state = apply();
+    let state = apply();
+    if (saved && value && (state.failed || !state.analytics)) {
+      try { localStorage.setItem(key, JSON.stringify({ analytics: false })); } catch {}
+      retained = denySession(); saved = false; state = apply();
+    }
     const result = { saved, analytics: state.analytics, message: saved ? (state.analytics ? messages.on : messages.off) : (retained ? messages.session : messages.page) };
     updateUI(state, result.message);
     if (!saved) document.getElementById('cookie-banner')?.classList.remove('hidden');
