@@ -1,28 +1,26 @@
 (() => {
   const key = 'supadio_cookie_preferences', deniedKey = 'supadio_analytics_denied', gaId = 'G-HXM22WWPKP';
+  const namePrefix = 'supadio-analytics-denied:';
   const en = document.documentElement.lang === 'en';
   const messages = en ? {
-    on: 'Analytics allowed in this browser.', off: 'Analytics rejected in this browser.',
-    session: 'Analytics is off for this tab, including navigation and refresh. The permanent choice could not be saved and the old choice may remain. Clear site data in browser settings to remove stored permission.',
-    page: 'Analytics is off on this page. Storage is unavailable; clear site data in browser settings before navigating or refreshing.'
+    on: 'Google Analytics allowed in this browser.', off: 'Google Analytics rejected in this browser.',
+    session: 'Google Analytics is off for this tab while its refusal remains available, including same-site navigation and refresh. The permanent choice could not be saved and an old grant may remain in other tabs. Clear site data in browser settings to remove stored permission.',
+    page: 'Google Analytics is off on this page. Refusal could not be retained for another page; clear site data in browser settings before navigating or refreshing.'
   } : {
-    on: 'Analitik diizinkan pada peramban ini.', off: 'Analitik ditolak pada peramban ini.',
-    session: 'Analitik dinonaktifkan untuk tab ini, termasuk perpindahan halaman dan pemuatan ulang. Pilihan permanen gagal disimpan dan pilihan lama mungkin masih ada. Hapus data situs melalui pengaturan peramban untuk menarik izin tersimpan.',
-    page: 'Analitik dinonaktifkan pada halaman ini. Penyimpanan tidak tersedia; hapus data situs melalui pengaturan peramban sebelum berpindah atau memuat ulang.'
+    on: 'Google Analytics diizinkan pada peramban ini.', off: 'Google Analytics ditolak pada peramban ini.',
+    session: 'Google Analytics nonaktif pada tab ini selama penolakannya masih tersedia, termasuk perpindahan halaman dalam situs dan pemuatan ulang. Pilihan permanen gagal disimpan dan izin lama mungkin masih ada di tab lain. Hapus data situs melalui pengaturan peramban untuk menghapus izin tersimpan.',
+    page: 'Google Analytics nonaktif pada halaman ini. Penolakan gagal dipertahankan untuk halaman berikutnya; hapus data situs melalui pengaturan peramban sebelum berpindah atau memuat ulang.'
   };
+  function nameDenied() { return String(window.name || '').startsWith(namePrefix); }
   function read() {
     try {
+      const denied = window.__supadioDenied || nameDenied() || sessionStorage.getItem(deniedKey) === '1';
       const raw = JSON.parse(localStorage.getItem(key) || 'null');
-      const denied = window.__supadioDenied || sessionStorage.getItem(deniedKey) === '1';
-      return { analytics: !denied && raw?.analytics === true, decided: denied || typeof raw?.analytics === 'boolean' };
-    } catch { return { analytics: false, decided: false }; }
+      return { analytics: !denied && raw?.analytics === true, decided: !!denied || typeof raw?.analytics === 'boolean', denied: !!denied, storedDenial: raw?.analytics === false, failed: false };
+    } catch { return { analytics: false, decided: false, denied: !!window.__supadioDenied, failed: true }; }
   }
-  function denySession() {
-    window.__supadioDenied = true; window['ga-disable-' + gaId] = true;
-    try { sessionStorage.setItem(deniedKey, '1'); return true; } catch { return false; }
-  }
-  function apply() {
-    const allowed = read().analytics; window['ga-disable-' + gaId] = !allowed;
+  function applyRuntime(allowed) {
+    window['ga-disable-' + gaId] = !allowed;
     if (!allowed) {
       if (window.gtag) window.gtag('consent', 'update', { analytics_storage: 'denied' });
       for (const part of document.cookie.split(';')) {
@@ -31,32 +29,83 @@
       }
       return;
     }
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+    if (!window.__supadioConfigured) window.gtag('consent', 'default', { analytics_storage: 'denied' });
+    window.gtag('consent', 'update', { analytics_storage: 'granted' });
+    if (!window.__supadioConfigured) {
+      window.__supadioConfigured = true;
+      window.gtag('js', new Date()); window.gtag('config', gaId);
+    }
     if (window.__supadioLoaded) return;
-    window.__supadioLoaded = true; window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { window.dataLayer.push(arguments); };
-    window.gtag('js', new Date()); window.gtag('config', gaId);
+    window.__supadioLoaded = true;
     const script = document.createElement('script'); script.async = true;
     script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId; document.head.appendChild(script);
   }
-  function save(value) {
-    value = value === true; let sessionDenied = false, saved = false;
-    if (!value) sessionDenied = denySession();
+  function denySession() {
+    window.__supadioDenied = true;
+    applyRuntime(false);
+    let retained = false;
+    try { sessionStorage.setItem(deniedKey, '1'); retained = sessionStorage.getItem(deniedKey) === '1'; } catch {}
     try {
-      localStorage.setItem(key, JSON.stringify({ analytics: value }));
-      if (value) { sessionStorage.removeItem(deniedKey); window.__supadioDenied = false; }
-      saved = true;
-    } catch { sessionDenied = denySession() || sessionDenied; }
-    apply();
-    const result = { saved, analytics: read().analytics, message: saved ? (value ? messages.on : messages.off) : (sessionDenied ? messages.session : messages.page) };
-    document.querySelectorAll('[data-consent-status]').forEach(node => { node.textContent = result.message; });
-    const checkbox = document.getElementById('analytics'); if (checkbox) checkbox.checked = result.analytics;
-    const banner = document.getElementById('cookie-banner'); if (saved) banner?.classList.add('hidden');
+      if (!nameDenied()) window.name = namePrefix + String(window.name || '');
+      retained = nameDenied() || retained;
+    } catch {}
+    return retained;
+  }
+  function clearVeto() {
+    try {
+      sessionStorage.getItem(deniedKey);
+      const name = String(window.name || '');
+      sessionStorage.removeItem(deniedKey);
+      if (sessionStorage.getItem(deniedKey) !== null) return false;
+      if (name.startsWith(namePrefix)) window.name = name.slice(namePrefix.length);
+      return !nameDenied();
+    } catch { return false; }
+  }
+  function updateUI(state, message) {
+    const checkbox = document.getElementById('analytics'); if (checkbox) checkbox.checked = state.analytics;
+    if (message) document.querySelectorAll('[data-consent-status]').forEach(node => { node.textContent = message; });
+    const banner = document.getElementById('cookie-banner');
+    if (state.decided && !state.failed && (!state.denied || state.storedDenial)) banner?.classList.add('hidden'); else banner?.classList.remove('hidden');
+  }
+  function apply() {
+    const state = read(); applyRuntime(state.analytics);
+    updateUI(state, state.failed ? messages.page : state.denied && !state.storedDenial ? messages.session : state.decided ? (state.analytics ? messages.on : messages.off) : '');
+    return state;
+  }
+  function save(value) {
+    value = value === true; let retained = false, saved = false;
+    if (!value) {
+      retained = denySession();
+      try {
+        localStorage.setItem(key, JSON.stringify({ analytics: false }));
+        saved = JSON.parse(localStorage.getItem(key) || 'null')?.analytics === false;
+      } catch {}
+    } else {
+      // Verify reads and both tab vetoes before publishing a shared grant.
+      try {
+        if (read().failed || !clearVeto()) throw Error('Choice unavailable');
+        localStorage.setItem(key, JSON.stringify({ analytics: true }));
+        if (JSON.parse(localStorage.getItem(key) || 'null')?.analytics !== true) throw Error('Choice not retained');
+        window.__supadioDenied = false;
+        const state = read();
+        if (state.failed || !state.analytics) throw Error('Choice unavailable');
+        saved = true;
+      } catch {
+        try { localStorage.setItem(key, JSON.stringify({ analytics: false })); } catch {}
+        retained = denySession();
+      }
+    }
+    const state = apply();
+    const result = { saved, analytics: state.analytics, message: saved ? (state.analytics ? messages.on : messages.off) : (retained ? messages.session : messages.page) };
+    updateUI(state, result.message);
+    if (!saved) document.getElementById('cookie-banner')?.classList.remove('hidden');
     return result;
   }
   window.SupadioConsent = { read, save };
   apply();
-  const checkbox = document.getElementById('analytics'); if (checkbox) checkbox.checked = read().analytics;
-  if (!read().decided) document.getElementById('cookie-banner')?.classList.remove('hidden');
+  const checkbox = document.getElementById('analytics');
   document.querySelectorAll('[data-cookie-accept]').forEach(node => node.addEventListener('click', () => save(true)));
   document.querySelectorAll('[data-cookie-reject]').forEach(node => node.addEventListener('click', () => save(false)));
   document.getElementById('cookie-settings')?.addEventListener('submit', event => { event.preventDefault(); save(checkbox?.checked === true); });

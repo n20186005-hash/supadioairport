@@ -52,7 +52,7 @@ export const shellCopy = {
     },
     cookieBanner: {
       regionLabel: 'Persetujuan cookie',
-      body: 'Analitik bersifat opsional dan nonaktif secara bawaan. Pilihan Anda disimpan pada peramban ini.',
+      body: 'Google Analytics bersifat opsional dan nonaktif secara bawaan. Kami mencoba menyimpan pilihan pada peramban ini; lihat pesan status jika penyimpanan terbatas.',
       reject: 'Tolak analitik',
       accept: 'Izinkan analitik',
       manage: 'Atur'
@@ -93,7 +93,7 @@ export const shellCopy = {
     },
     cookieBanner: {
       regionLabel: 'Cookie consent',
-      body: 'Analytics is optional and off by default. Your choices are stored in this browser.',
+      body: 'Google Analytics is optional and off by default. We try to save your choice in this browser; see the status message for storage limitations.',
       reject: 'Reject analytics',
       accept: 'Allow analytics',
       manage: 'Manage'
