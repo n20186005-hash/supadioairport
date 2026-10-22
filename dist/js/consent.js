@@ -3,13 +3,15 @@
   const namePrefix = 'supadio-analytics-denied:';
   const en = document.documentElement.lang === 'en';
   const messages = en ? {
-    on: 'Google Analytics allowed in this browser.', off: 'Google Analytics rejected in this browser.',
-    session: 'Google Analytics is off for this tab while its refusal remains available, including same-site navigation and refresh. The permanent choice could not be saved and an old grant may remain in other tabs. Clear site data in browser settings to remove stored permission.',
-    page: 'Google Analytics is off on this page. Refusal could not be retained for another page; clear site data in browser settings before navigating or refreshing.'
+    on: 'Google Analytics allowed in this tab.', off: 'Google Analytics rejected in this tab.',
+    session: 'Google Analytics is off for this tab while its refusal remains available, including same-site navigation and refresh. The permanent choice could not be saved and stored permission may remain and be used in other tabs. Clear site data in browser settings to remove stored permission.',
+    page: 'Google Analytics is off on this page. Stored permission may remain and be used in other tabs. Refusal could not be retained for another page; clear site data in browser settings before navigating or refreshing.',
+    rollback: 'Google Analytics is off on this page. The unconfirmed stored permission was rejected or removed. Check these settings before allowing again.'
   } : {
-    on: 'Google Analytics diizinkan pada peramban ini.', off: 'Google Analytics ditolak pada peramban ini.',
-    session: 'Google Analytics nonaktif pada tab ini selama penolakannya masih tersedia, termasuk perpindahan halaman dalam situs dan pemuatan ulang. Pilihan permanen gagal disimpan dan izin lama mungkin masih ada di tab lain. Hapus data situs melalui pengaturan peramban untuk menghapus izin tersimpan.',
-    page: 'Google Analytics nonaktif pada halaman ini. Penolakan gagal dipertahankan untuk halaman berikutnya; hapus data situs melalui pengaturan peramban sebelum berpindah atau memuat ulang.'
+    on: 'Google Analytics diizinkan pada tab ini.', off: 'Google Analytics ditolak pada tab ini.',
+    session: 'Google Analytics nonaktif pada tab ini selama penolakannya masih tersedia, termasuk perpindahan halaman dalam situs dan pemuatan ulang. Pilihan permanen gagal disimpan dan izin tersimpan mungkin masih ada dan digunakan di tab lain. Hapus data situs melalui pengaturan peramban untuk menghapus izin tersimpan.',
+    page: 'Google Analytics nonaktif pada halaman ini. Izin tersimpan mungkin masih ada dan digunakan di tab lain. Penolakan gagal dipertahankan untuk halaman berikutnya; hapus data situs melalui pengaturan peramban sebelum berpindah atau memuat ulang.',
+    rollback: 'Google Analytics nonaktif pada halaman ini. Izin tersimpan yang gagal dikonfirmasi telah ditolak atau dihapus. Periksa pengaturan ini sebelum mengizinkan kembali.'
   };
   function nameDenied() { return String(window.name || '').startsWith(namePrefix); }
   function read() {
@@ -63,9 +65,16 @@
       return !nameDenied();
     } catch { return false; }
   }
+  function rollbackGrant() {
+    try {
+      localStorage.setItem(key, JSON.stringify({ analytics: false }));
+      if (JSON.parse(localStorage.getItem(key) || 'null')?.analytics === false) return true;
+    } catch {}
+    try { localStorage.removeItem(key); return localStorage.getItem(key) === null; } catch { return false; }
+  }
   function updateUI(state, message) {
     const checkbox = document.getElementById('analytics'); if (checkbox) checkbox.checked = state.analytics;
-    if (message) document.querySelectorAll('[data-consent-status]').forEach(node => { node.textContent = message; });
+    if (message !== undefined) document.querySelectorAll('[data-consent-status]').forEach(node => { node.textContent = message; });
     const banner = document.getElementById('cookie-banner');
     if (state.decided && !state.failed && (!state.denied || state.storedDenial)) banner?.classList.add('hidden'); else banner?.classList.remove('hidden');
   }
@@ -75,7 +84,7 @@
     return state;
   }
   function save(value) {
-    value = value === true; let retained = false, saved = false;
+    value = value === true; let retained = false, saved = false, grantCleared = false;
     if (!value) {
       retained = denySession();
       try {
@@ -93,16 +102,16 @@
         if (state.failed || !state.analytics) throw Error('Choice unavailable');
         saved = true;
       } catch {
-        try { localStorage.setItem(key, JSON.stringify({ analytics: false })); } catch {}
+        grantCleared = rollbackGrant();
         retained = denySession();
       }
     }
     let state = apply();
     if (saved && value && (state.failed || !state.analytics)) {
-      try { localStorage.setItem(key, JSON.stringify({ analytics: false })); } catch {}
+      grantCleared = rollbackGrant();
       retained = denySession(); saved = false; state = apply();
     }
-    const result = { saved, analytics: state.analytics, message: saved ? (state.analytics ? messages.on : messages.off) : (retained ? messages.session : messages.page) };
+    const result = { saved, analytics: state.analytics, message: saved ? (state.analytics ? messages.on : messages.off) : (grantCleared ? messages.rollback : retained ? messages.session : messages.page) };
     updateUI(state, result.message);
     if (!saved) document.getElementById('cookie-banner')?.classList.remove('hidden');
     return result;
