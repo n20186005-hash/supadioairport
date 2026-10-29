@@ -20,15 +20,15 @@ export const guideCopy = {
       ],
       [
         "Google Maps",
-        "4,4 / 5 · 8.149 ulasan"
+        "4,4 / 5 · 8.161 ulasan"
       ],
       [
         "Pemeriksaan",
-        "19 Oktober 2026"
+        "29 Oktober 2026"
       ]
     ],
     "overviewTitle": "Melayani Pontianak, berada di Kabupaten Kubu Raya.",
-    "overview": "Profil Direktorat Jenderal Perhubungan Udara yang diperiksa 19 Oktober 2026 mencatat Supadio di Limbung, Sungai Raya, Kabupaten Kubu Raya, Kalimantan Barat, dengan kode IATA PNK, ICAO WIOO dan pengelola PT Angkasa Pura Indonesia. Profil menyebut penggunaan internasional; status tersebut tidak menjamin rute internasional tersedia pada tanggal tertentu.",
+    "overview": "Profil Direktorat Jenderal Perhubungan Udara yang diperiksa 29 Oktober 2026 mencatat Supadio di Limbung, Sungai Raya, Kabupaten Kubu Raya, Kalimantan Barat, dengan kode IATA PNK, ICAO WIOO dan pengelola PT Angkasa Pura Indonesia. Profil menyebut penggunaan internasional; status tersebut tidak menjamin rute internasional tersedia pada tanggal tertentu.",
     "hoursTitle": "Jam operasional belum dikonfirmasi.",
     "hours": "Google Maps pada tanggal pemeriksaan tidak mencantumkan jam, telepon atau situs pengelola. Panduan ini tidak mempertahankan angka jam operasi lama atau menebak 24 jam dari grafik kunjungan. Pastikan akses terminal dan waktu layanan melalui maskapai serta kanal resmi.",
     "official": "Profil resmi regulator ↗",
@@ -74,10 +74,10 @@ export const guideCopy = {
     "nearbyTitle": "Pisahkan rencana kunjungan kota dari perjalanan bandara.",
     "nearby": "Jika melanjutkan ke Pontianak atau Kubu Raya, periksa alamat, jam, biaya dan akses tujuan Anda secara terpisah. Panduan ini tidak memastikan jalur wisata, fasilitas penginapan, pengisian kendaraan atau tiket gabungan. Sisakan waktu sesuai penerbangan dan konfirmasi transportasi pulang.",
     "locationTitle": "Dua sumber memakai penulisan alamat berbeda.",
-    "location": "Google Maps 19 Oktober 2026: Jl. Arteri Supadio No. Km. 17, Limbung, Sungai Raya, Kubu Raya, Kalimantan Barat 78391. Profil Hubud menulis Jl. Adisucipto KM17 Pontianak 78381. Keduanya merujuk Supadio; konfirmasikan pintu terminal dan titik tujuan, bukan mengandalkan kode pos saja. Pin peta -0.1476038, 109.4052887 adalah orientasi pengunjung, bukan koordinat teknis ARP bandara.",
+    "location": "Google Maps 29 Oktober 2026: Jl. Arteri Supadio No. Km. 17, Limbung, Sungai Raya, Kubu Raya, Kalimantan Barat 78391. Profil Hubud menulis Jl. Adisucipto KM17 Pontianak 78381. Keduanya merujuk Supadio; konfirmasikan pintu terminal dan titik tujuan, bukan mengandalkan kode pos saja. Pin peta -0.1476038, 109.4052887 adalah orientasi pengunjung, bukan koordinat teknis ARP bandara.",
     "faqTitle": "Tanya jawab sebelum berangkat",
     "sourceTitle": "Sumber publik dan batas informasinya",
-    "sourceNote": "Pemeriksaan sumber: 19 Oktober 2026. Nilai Google Maps adalah cuplikan pihak ketiga, bukan penilaian milik situs ini. Foto tidak menetapkan jadwal, penerbangan atau fasilitas saat ini.",
+    "sourceNote": "Pemeriksaan sumber: 29 Oktober 2026. Nilai Google Maps adalah cuplikan pihak ketiga, bukan penilaian milik situs ini. Angka 8.161 ulasan diserahkan pemilik situs pada 29 Oktober 2026 dan masih menunggu verifikasi ulang independen. Foto tidak menetapkan jadwal, penerbangan atau fasilitas saat ini.",
     "faq": [
       [
         "Apa kode Bandara Supadio?",
@@ -89,7 +89,7 @@ export const guideCopy = {
       ],
       [
         "Apakah bandara buka 24 jam?",
-        "Jam tidak tercantum pada Google Maps yang diperiksa 19 Oktober 2026. Tidak ada jam tetap atau akses malam yang dijamin di sini. Konfirmasikan akses terminal dan jadwal layanan melalui pengelola serta maskapai."
+        "Jam tidak tercantum pada Google Maps yang diperiksa 29 Oktober 2026. Tidak ada jam tetap atau akses malam yang dijamin di sini. Konfirmasikan akses terminal dan jadwal layanan melalui pengelola serta maskapai."
       ],
       [
         "Di mana memeriksa status penerbangan?",
@@ -138,15 +138,15 @@ export const guideCopy = {
       ],
       [
         "Google Maps",
-        "4.4 / 5 · 8,149 reviews"
+        "4.4 / 5 · 8,161 reviews"
       ],
       [
         "Checked",
-        "19 October 2026"
+        "29 October 2026"
       ]
     ],
     "overviewTitle": "Serving Pontianak, located in Kubu Raya Regency.",
-    "overview": "The Directorate General of Civil Aviation profile checked on 19 October 2026 places Supadio in Limbung, Sungai Raya, Kubu Raya Regency, West Kalimantan, with IATA PNK, ICAO WIOO and operator PT Angkasa Pura Indonesia. It lists international use; that status does not guarantee an international route on a particular date.",
+    "overview": "The Directorate General of Civil Aviation profile checked on 29 October 2026 places Supadio in Limbung, Sungai Raya, Kubu Raya Regency, West Kalimantan, with IATA PNK, ICAO WIOO and operator PT Angkasa Pura Indonesia. It lists international use; that status does not guarantee an international route on a particular date.",
     "hoursTitle": "Operating hours have not been confirmed.",
     "hours": "Google Maps did not list hours, a telephone or an operator website when checked. This guide does not retain the old hours claim or infer 24-hour operation from popularity charts. Confirm terminal access and service times with your airline and official channels.",
     "official": "Official regulator profile ↗",
@@ -192,10 +192,10 @@ export const guideCopy = {
     "nearbyTitle": "Plan city visits separately from your airport journey.",
     "nearby": "For onward visits in Pontianak or Kubu Raya, check each destination’s address, hours, costs and access separately. This guide does not confirm sightseeing paths, accommodation facilities, vehicle charging or combined tickets. Allow time according to your flight and confirm return transport.",
     "locationTitle": "Two sources use different address wording.",
-    "location": "Google Maps on 19 October 2026: Jl. Arteri Supadio No. Km. 17, Limbung, Sungai Raya, Kubu Raya, West Kalimantan 78391. Hubud writes Jl. Adisucipto KM17 Pontianak 78381. Both refer to Supadio; confirm your terminal entrance and destination point rather than relying only on a postcode. The map pin -0.1476038, 109.4052887 is visitor orientation, not the airport’s technical ARP coordinate.",
+    "location": "Google Maps on 29 October 2026: Jl. Arteri Supadio No. Km. 17, Limbung, Sungai Raya, Kubu Raya, West Kalimantan 78391. Hubud writes Jl. Adisucipto KM17 Pontianak 78381. Both refer to Supadio; confirm your terminal entrance and destination point rather than relying only on a postcode. The map pin -0.1476038, 109.4052887 is visitor orientation, not the airport’s technical ARP coordinate.",
     "faqTitle": "Questions before travelling",
     "sourceTitle": "Public sources and their limits",
-    "sourceNote": "Sources checked 19 October 2026. Google Maps ratings are a third-party snapshot, not this site’s own reviews. Photographs do not establish current schedules, flights or facilities.",
+    "sourceNote": "Sources checked 29 October 2026. Google Maps ratings are a third-party snapshot, not this site’s own reviews. The 8,161 review count was submitted by the site owner on 29 October 2026 and is pending independent re-verification. Photographs do not establish current schedules, flights or facilities.",
     "faq": [
       [
         "What is the Supadio Airport code?",
@@ -207,7 +207,7 @@ export const guideCopy = {
       ],
       [
         "Is the airport open 24 hours?",
-        "Google Maps did not list hours when checked on 19 October 2026. This guide guarantees no fixed hours or night access. Confirm terminal access and service times with the operator and airline."
+        "Google Maps did not list hours when checked on 29 October 2026. This guide guarantees no fixed hours or night access. Confirm terminal access and service times with the operator and airline."
       ],
       [
         "Where can I check flight status?",

@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getTopic, TOPIC_GROUP_LABELS, CHECK_DATE, AIRPORT_MAP, type Locale } from '../data/topics';
+
+interface Props { locale: Locale; slug: string; }
+const { locale, slug } = Astro.props;
+const topic = getTopic(slug)!;
+const c = locale === 'id' ? topic.id : topic.en;
+const groupLabel = TOPIC_GROUP_LABELS[topic.group][locale];
+const translated = locale === 'id';
+
+const homePath = locale === 'id' ? '/' : '/en/';
+const hubPath = locale === 'id' ? '/topik/' : '/en/topic/';
+const topicPath = locale === 'id' ? `/topik/${slug}/` : `/en/topic/${slug}/`;
+const enPath = `/en/topic/${slug}/`;
+const idPath = `/topik/${slug}/`;
+const check = CHECK_DATE[locale];
+const mapLink = AIRPORT_MAP;
+
+const relatedItems = (c.related || [])
+  .map((r) => getTopic(r))
+  .filter((t): t is NonNullable<typeof t> => Boolean(t))
+  .map((t) => ({
+    slug: t.slug,
+    label: (locale === 'id' ? t.id : t.en).h1,
+    href: locale === 'id' ? `/topik/${t.slug}/` : `/en/topic/${t.slug}/`
+  }));
+
+const faqTitle = translated ? 'Pertanyaan umum' : 'Frequently asked questions';
+const updatedLabel = translated ? 'Diperbarui' : 'Updated';
+const relatedTitle = translated ? 'Topik terkait' : 'Related topics';
+const sourceLabel = translated ? 'Sumber & metodologi' : 'Sources & methodology';
+const disclaimer = translated
+  ? 'Panduan independen, bukan situs resmi bandara. Konfirmasikan jam, tarif, dan layanan ke maskapai serta pengelola.'
+  : 'Independent guide, not the airport official website. Confirm hours, fares, and services with the airline and operator.';
+
+const breadcrumb = [
+  { name: translated ? 'Beranda' : 'Home', href: homePath },
+  { name: groupLabel, href: hubPath },
+  { name: c.h1, href: topicPath }
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': topicPath,
+      url: topicPath,
+      name: c.title,
+      inLanguage: locale,
+      isPartOf: { '@id': homePath },
+      about: { '@id': 'https://supadioairport.com/#airport' },
+      dateModified: '2026-10-29'
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumb.map((b, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: b.name,
+        item: b.href
+      }))
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: c.faq.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a }
+      }))
+    }
+  ]
+};
+---
+<BaseLayout
+  locale={locale}
+  pageKey="topics"
+  title={c.title}
+  description={c.description}
+  alternatePaths={{ id: idPath, en: enPath }}
+>
+  <main id="konten" class="container-site max-w-4xl py-12">
+    <nav aria-label="Breadcrumb" class="text-sm text-ink/60">
+      {breadcrumb.map((b, i) => (
+        <span>
+          {i > 0 && <span class="px-2 text-ink/30">/</span>}
+          <a href={b.href} class="underline">{b.name}</a>
+        </span>
+      ))}
+    </nav>
+
+    <p class="eyebrow text-river mt-6">{groupLabel}</p>
+    <h1 class="mt-3 text-4xl font-black tracking-tight md:text-5xl">{c.h1}</h1>
+    <p class="mt-3 text-sm text-ink/55">{updatedLabel} {check}</p>
+    <p class="mt-6 text-lg leading-8 text-ink/80">{c.intro}</p>
+
+    <div class="mt-10 space-y-10">
+      {c.sections.map((s) => (
+        <section>
+          <h2 id={s.id} class="text-2xl font-extrabold">{s.heading}</h2>
+          <p class="mt-4 leading-8 text-ink/75">{s.body}</p>
+        </section>
+      ))}
+    </div>
+
+    <section id="faq" class="mt-12">
+      <h2 class="text-3xl font-black">{faqTitle}</h2>
+      <div class="mt-6 space-y-4">
+        {c.faq.map((f) => (
+          <details class="card p-6">
+            <summary class="cursor-pointer font-extrabold">{f.q}</summary>
+            <p class="mt-4 leading-8 text-ink/75">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    {relatedItems.length > 0 && (
+      <section class="mt-12">
+        <h2 class="text-2xl font-black">{relatedTitle}</h2>
+        <ul class="mt-5 grid gap-3 sm:grid-cols-2">
+          {relatedItems.map((r) => (
+            <li>
+              <a href={r.href} class="card block p-5 font-bold hover:border-runway">{r.label}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section class="mt-12 rounded-2xl border border-white/15 bg-night p-6 text-white/85">
+      <h2 class="text-xl font-extrabold text-white">{sourceLabel}</h2>
+      <p class="mt-3 text-sm leading-7">{disclaimer}</p>
+      <p class="mt-3 text-sm">
+        <a class="underline" href={mapLink} target="_blank" rel="noreferrer">Google Maps · {translated ? 'diperiksa ' : 'checked '}{check}</a>
+      </p>
+    </section>
+  </main>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+</BaseLayout>

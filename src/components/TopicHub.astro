@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { TOPIC_GROUP_ORDER, TOPIC_GROUP_LABELS, topicsByGroup, type Locale } from '../data/topics';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const translated = locale === 'id';
+const groups = TOPIC_GROUP_ORDER.map((g) => ({
+  key: g,
+  label: TOPIC_GROUP_LABELS[g][locale],
+  topics: topicsByGroup(locale)[g]
+}));
+
+const title = translated ? 'Panduan Topik Bandara Supadio' : 'Supadio Airport Topic Guides';
+const description = translated
+  ? 'Kumpulan panduan independen seputar Bandara Supadio: penerbangan, transportasi, parkir, kuliner, akomodasi, dan wisata Pontianak.'
+  : 'Independent guides around Supadio Airport: flights, transport, parking, dining, accommodation, and Pontianak attractions.';
+const lead = translated
+  ? 'Pilih topik di bawah untuk panduan praktis persiapan perjalanan. Semua halaman adalah panduan pengunjung independen, bukan situs resmi bandara.'
+  : 'Choose a topic below for practical travel preparation. All pages are an independent visitor guide, not the airport official website.';
+const homeLabel = translated ? 'Beranda' : 'Home';
+const homePath = locale === 'id' ? '/' : '/en/';
+---
+<BaseLayout locale={locale} pageKey="topics" title={title} description={description}>
+  <main id="konten" class="container-site max-w-4xl py-12">
+    <nav aria-label="Breadcrumb" class="text-sm text-ink/60">
+      <a href={homePath} class="underline">{homeLabel}</a>
+      <span class="px-2 text-ink/30">/</span>
+      <span>{title}</span>
+    </nav>
+    <h1 class="mt-6 text-4xl font-black tracking-tight md:text-5xl">{title}</h1>
+    <p class="mt-6 text-lg leading-8 text-ink/80">{lead}</p>
+
+    <div class="mt-10 space-y-12">
+      {groups.map((g) => (
+        <section>
+          <h2 class="text-2xl font-extrabold">{g.label}</h2>
+          <ul class="mt-5 grid gap-3 sm:grid-cols-2">
+            {g.topics.map((t) => {
+              const content = locale === 'id' ? t.id : t.en;
+              const href = locale === 'id' ? `/topik/${t.slug}/` : `/en/topic/${t.slug}/`;
+              return (
+                <li>
+                  <a href={href} class="card block p-5 hover:border-runway">
+                    <p class="font-bold leading-7">{content.h1}</p>
+                    <p class="mt-2 text-sm leading-6 text-ink/65">{content.intro}</p>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </main>
+</BaseLayout>

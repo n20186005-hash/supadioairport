@@ -5,14 +5,18 @@ import Footer from '../components/Footer.astro';
 import { siteName, withSiteName } from '../data/site';
 import { getLocalizedPath, shellCopy, type Locale, type PageKey } from '../data/i18n';
 
-interface Props { title: string; description: string; image?: string; noIndex?: boolean; hideHeader?: boolean; locale?: Locale; pageKey?: PageKey; }
-const { title, description, image = '/images/supadio-aircraft.webp', hideHeader = false, locale = 'id', pageKey, noIndex = false } = Astro.props;
+interface Props { title: string; description: string; image?: string; noIndex?: boolean; hideHeader?: boolean; locale?: Locale; pageKey?: PageKey; alternatePaths?: { id?: string; en?: string }; }
+const { title, description, image = '/images/supadio-aircraft.webp', hideHeader = false, locale = 'id', pageKey, noIndex = false, alternatePaths } = Astro.props;
 const copy = shellCopy[locale];
 const finalTitle = pageKey === 'home' ? title : withSiteName(title, locale);
 const canonical = Astro.site && !noIndex ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 const absoluteImage = Astro.site ? new URL(image, Astro.site).href : image;
-const alternateId = Astro.site && pageKey && !noIndex ? new URL(getLocalizedPath(pageKey, 'id'), Astro.site).href : undefined;
-const alternateEn = Astro.site && pageKey && !noIndex ? new URL(getLocalizedPath(pageKey, 'en'), Astro.site).href : undefined;
+const alternateId = !noIndex && Astro.site && (alternatePaths?.id || (pageKey ? getLocalizedPath(pageKey, 'id') : undefined))
+  ? new URL(alternatePaths?.id || getLocalizedPath(pageKey!, 'id'), Astro.site).href
+  : undefined;
+const alternateEn = !noIndex && Astro.site && (alternatePaths?.en || (pageKey ? getLocalizedPath(pageKey, 'en') : undefined))
+  ? new URL(alternatePaths?.en || getLocalizedPath(pageKey!, 'en'), Astro.site).href
+  : undefined;
 
 ---
 <!doctype html>

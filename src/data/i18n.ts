@@ -1,11 +1,12 @@
 export type Locale = 'id' | 'en';
-export type PageKey = 'home' | 'privacy' | 'terms' | 'cookies';
+export type PageKey = 'home' | 'privacy' | 'terms' | 'cookies' | 'topics';
 
 export const localizedPaths: Record<PageKey, Record<Locale, string>> = {
   home: { id: '/', en: '/en/' },
   privacy: { id: '/kebijakan-privasi/', en: '/en/privacy-policy/' },
   terms: { id: '/ketentuan-layanan/', en: '/en/terms-of-use/' },
-  cookies: { id: '/pengaturan-cookie/', en: '/en/cookie-settings/' }
+  cookies: { id: '/pengaturan-cookie/', en: '/en/cookie-settings/' },
+  topics: { id: '/topik/', en: '/en/topic/' }
 };
 
 export function getAlternateLocale(locale: Locale): Locale {
@@ -28,6 +29,7 @@ export const shellCopy = {
         { id: 'transportasi', label: 'Transportasi' },
         { id: 'fasilitas', label: 'Fasilitas' },
         { id: 'sekitar', label: 'Sekitar' },
+        { id: 'topik', label: 'Topik' },
         { id: 'faq', label: 'Tanya jawab' }
       ],
       switchLabel: 'EN',
@@ -69,6 +71,7 @@ export const shellCopy = {
         { id: 'transportasi', label: 'Transport' },
         { id: 'fasilitas', label: 'Facilities' },
         { id: 'sekitar', label: 'Nearby' },
+        { id: 'topik', label: 'Topics' },
         { id: 'faq', label: 'FAQ' }
       ],
       switchLabel: 'ID',

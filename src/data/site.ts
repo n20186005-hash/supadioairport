@@ -9,7 +9,7 @@ export const airport = {
   latitude: -0.1476038,
   longitude: 109.4052887,
   rating: 4.4,
-  ratingCount: 8149,
+  ratingCount: 8161,
   gaId: 'G-HXM22WWPKP'
 } as const;
 
